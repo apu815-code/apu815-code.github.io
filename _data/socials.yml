@@ -1,0 +1,12 @@
+# Social / academic profile links shown on the About page and in the footer.
+# Order here = display order. See https://github.com/george-gca/jekyll-socials for all supported keys.
+email: mahbubalam@eee.buet.ac.bd
+scholar_userid: 5dlRXsAAAAAJ # Google Scholar
+research_gate_profile: Mahbub-Alam-19
+# orcid_id: 0000-0000-0000-0000        # add your ORCID iD and uncomment
+# linkedin_username: your-linkedin-id  # add and uncomment
+# github_username: YOUR-GITHUB-USERNAME
+buet_profile:
+  logo: fa-solid fa-building-columns
+  title: BUET EEE faculty profile
+  url: https://eee.buet.ac.bd/people/faculty/dma

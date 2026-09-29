@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rectangular barrier tunneling</title>
+<style>
+  :root { --ink:#1b1740; --muted:#6a6790; --p:#5b3df5; --pk:#ff4f8b; --tl:#00c2a8; --am:#ffb020; --bg:#fbfaff; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color:var(--ink); background:var(--bg); }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 14px; }
+  .controls { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px 20px; margin-bottom:10px; }
+  label { display:block; font-size:.85rem; font-weight:600; }
+  label span { float:right; color:var(--p); font-variant-numeric: tabular-nums; }
+  input[type=range] { width:100%; accent-color: var(--pk); }
+  canvas { width:100%; height:auto; background:#fff; border-radius:12px; box-shadow:0 4px 18px rgba(91,61,245,.15); display:block; margin-top:10px; }
+  .readout { display:flex; flex-wrap:wrap; gap:10px; margin:10px 0; }
+  .pill { padding:6px 14px; border-radius:999px; color:#fff; font-weight:600; font-size:.9rem; }
+  .p1{background:var(--p)} .p2{background:var(--pk)} .p3{background:var(--tl);color:#06322b} .p4{background:var(--am);color:#3d2a00}
+  .note { font-size:.78rem; color:var(--muted); margin-top:6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="controls">
+    <label>Barrier height V₀ <span id="v0v"></span><input id="v0" type="range" min="0.1" max="3" step="0.05" value="1"></label>
+    <label>Barrier width a <span id="av"></span><input id="a" type="range" min="0.2" max="5" step="0.1" value="1.5"></label>
+    <label>Effective mass m*/m₀ <span id="mv"></span><input id="m" type="range" min="0.02" max="1.5" step="0.01" value="0.25"></label>
+    <label>Electron energy E <span id="ev"></span><input id="e" type="range" min="0.01" max="3" step="0.01" value="0.4"></label>
+  </div>
+  <div class="readout">
+    <div class="pill p1" id="rT"></div>
+    <div class="pill p2" id="rK"></div>
+    <div class="pill p3" id="rR"></div>
+    <div class="pill p4" id="rG"></div>
+  </div>
+  <canvas id="cv" width="900" height="420"></canvas>
+  <div class="note">Units: energies in eV, widths in nm. ħ²/2m₀ = 0.0381 eV·nm². The dot on the curve marks the chosen energy E. Single rectangular barrier, exact transfer-matrix result.</div>
+</div>
+<script>
+const HB2_2M0 = 0.0380998; // eV nm^2
+const $ = id => document.getElementById(id);
+
+function transmission(E, V0, a, mr) {
+  if (E <= 0) return 0;
+  const c = HB2_2M0 / mr; // hbar^2/(2 m*)  in eV nm^2
+  if (Math.abs(E - V0) < 1e-9) {
+    const k = Math.sqrt(E / c);
+    return 1 / (1 + (k * a) * (k * a) / 4);
+  }
+  if (E < V0) {
+    const kappa = Math.sqrt((V0 - E) / c);
+    const x = kappa * a;
+    // sinh^2 overflow-safe
+    const s2 = x > 300 ? Math.exp(2 * x - 1.3862943611) : Math.sinh(x) ** 2;
+    return 1 / (1 + (V0 * V0 * s2) / (4 * E * (V0 - E)));
+  }
+  const q = Math.sqrt((E - V0) / c);
+  const s2 = Math.sin(q * a) ** 2;
+  return 1 / (1 + (V0 * V0 * s2) / (4 * E * (E - V0)));
+}
+
+function fmt(t) {
+  if (t === 0) return "0";
+  if (t < 1e-3) return t.toExponential(2);
+  return t.toFixed(4);
+}
+
+function draw() {
+  const V0 = +$("v0").value, a = +$("a").value, mr = +$("m").value, E = +$("e").value;
+  $("v0v").textContent = V0.toFixed(2) + " eV";
+  $("av").textContent = a.toFixed(1) + " nm";
+  $("mv").textContent = mr.toFixed(2);
+  $("ev").textContent = E.toFixed(2) + " eV";
+
+  const T = transmission(E, V0, a, mr);
+  const c = HB2_2M0 / mr;
+  const kappa = E < V0 ? Math.sqrt((V0 - E) / c) : 0;
+  $("rT").textContent = "T = " + fmt(T);
+  $("rR").textContent = "R = " + fmt(1 - T);
+  $("rK").textContent = E < V0 ? "κ = " + kappa.toFixed(2) + " nm⁻¹ (tunneling)" : "E ≥ V₀: over-barrier";
+  $("rG").textContent = "G = T·2e²/h = " + (T * 77.48).toPrecision(3) + " µS";
+
+  const cv = $("cv"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, L = 62, R = 20, Tp = 20, B = 48;
+  ctx.clearRect(0, 0, W, H);
+  const Emax = 3, N = 500;
+  const X = e => L + (e / Emax) * (W - L - R);
+  const Y = t => Tp + (1 - t) * (H - Tp - B);
+
+  // grid
+  ctx.strokeStyle = "#e6e2ff"; ctx.lineWidth = 1; ctx.fillStyle = "#6a6790"; ctx.font = "13px system-ui";
+  for (let i = 0; i <= 5; i++) {
+    const y = Y(i / 5); ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(W - R, y); ctx.stroke();
+    ctx.fillText((i / 5).toFixed(1), 30, y + 4);
+  }
+  for (let e = 0; e <= Emax; e += 0.5) {
+    const x = X(e); ctx.beginPath(); ctx.moveTo(x, Tp); ctx.lineTo(x, H - B); ctx.stroke();
+    ctx.fillText(e.toFixed(1), x - 10, H - B + 18);
+  }
+  ctx.fillStyle = "#1b1740"; ctx.font = "600 13px system-ui";
+  ctx.fillText("Energy E (eV)", (W + L) / 2 - 40, H - 10);
+  ctx.save(); ctx.translate(14, (H - B) / 2 + 40); ctx.rotate(-Math.PI / 2); ctx.fillText("Transmission T(E)", 0, 0); ctx.restore();
+
+  // V0 marker
+  ctx.setLineDash([6, 5]); ctx.strokeStyle = "#ffb020"; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(X(V0), Tp); ctx.lineTo(X(V0), H - B); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = "#b37700"; ctx.fillText("V₀", X(V0) + 5, Tp + 14);
+
+  // curve with gradient
+  const g = ctx.createLinearGradient(L, 0, W - R, 0);
+  g.addColorStop(0, "#5b3df5"); g.addColorStop(0.55, "#ff4f8b"); g.addColorStop(1, "#00c2a8");
+  ctx.strokeStyle = g; ctx.lineWidth = 3.5; ctx.beginPath();
+  for (let i = 0; i <= N; i++) {
+    const e = 0.0005 + (i / N) * (Emax - 0.0005);
+    const x = X(e), y = Y(transmission(e, V0, a, mr));
+    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  }
+  ctx.stroke();
+
+  // operating point
+  ctx.fillStyle = "#ff4f8b"; ctx.strokeStyle = "#fff"; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(X(E), Y(T), 7, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+}
+
+["v0", "a", "m", "e"].forEach(id => $(id).addEventListener("input", draw));
+draw();
+</script>
+</body>
+</html>

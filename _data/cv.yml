@@ -1,0 +1,73 @@
+cv:
+  name: Mahbub Alam
+  label: Professor, Department of EEE, BUET
+  email: mahbubalam@eee.buet.ac.bd
+  location: Dhaka, Bangladesh
+  image: ""
+  summary: Professor of Electrical and Electronic Engineering at BUET working on computational nanoelectronics, quantum transport and topological devices, and on forensic and testing consultancy through BRTC.
+
+  social_networks:
+    - network: LinkedIn
+      username: your-linkedin-id
+
+  sections:
+    Education:
+      - institution: Georgia Institute of Technology
+        location: Atlanta, Georgia, USA
+        area: Electrical and Computer Engineering
+        studyType: Ph.D.
+        start_date: 2010
+        end_date: 2016
+        highlights:
+          - "Thesis: Nanoscale optical devices based on phase coherent electron transport (advisor: Paul L. Voss)"
+          - Colonel Oscar P. Cleaver Award for Outstanding Graduate Student (Spring 2011)
+
+      - institution: Bangladesh University of Engineering and Technology
+        location: Dhaka, Bangladesh
+        area: Electrical and Electronic Engineering
+        studyType: M.Sc. Engineering
+        end_date: 2006
+
+      - institution: Bangladesh University of Engineering and Technology
+        location: Dhaka, Bangladesh
+        area: Electrical and Electronic Engineering
+        studyType: B.Sc. Engineering
+        end_date: 1999
+
+    Experience:
+      - company: Bangladesh University of Engineering and Technology
+        position: Professor, Department of EEE
+        location: Dhaka, Bangladesh
+        start_date: 2022-08
+        end_date: present
+      - company: Bangladesh University of Engineering and Technology
+        position: Associate Professor, Department of EEE
+        location: Dhaka, Bangladesh
+        start_date: 2017-10
+        end_date: 2022-08
+      - company: Bangladesh University of Engineering and Technology
+        position: Assistant Professor, Department of EEE
+        location: Dhaka, Bangladesh
+        start_date: 2006-04
+        end_date: 2017-10
+      - company: Bangladesh University of Engineering and Technology
+        position: Lecturer, Department of EEE
+        location: Dhaka, Bangladesh
+        start_date: 1999-11
+        end_date: 2006-04
+
+    Consultancy:
+      - company: Bureau of Research, Testing and Consultation (BRTC), BUET
+        position: Consultant and examination coordinator
+        location: Dhaka, Bangladesh
+        highlights:
+          - Forensic electrical and fire investigation (NFPA 921 methodology)
+          - Testing of electrical and electronic components and products
+          - Electrical design of residential complexes, educational institutions, dormitories and port facilities
+          - Recruitment examinations for public utilities and organizations
+
+    Skills:
+      - name: Electronic structure
+        keywords: "Quantum ESPRESSO, Wannier90, WannierTools, Z2Pack, BoltzTraP2"
+      - name: Quantum transport and devices
+        keywords: "NEGF, Schrödinger-Poisson, Sentaurus TCAD, Silvaco, SPICE"

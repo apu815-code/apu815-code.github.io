@@ -1,0 +1,37 @@
+# Short venue badges used via the `abbr` field in _bibliography/papers.bib
+"JCE":
+  url: https://link.springer.com/journal/10825
+  color: "#1f3b5a"
+"PhysScr":
+  url: https://iopscience.iop.org/journal/1402-4896
+  color: "#2e6b8a"
+"SST":
+  url: https://iopscience.iop.org/journal/0268-1242
+  color: "#2e6b8a"
+"Micromachines":
+  url: https://www.mdpi.com/journal/micromachines
+  color: "#3d7a5a"
+"SciRep":
+  url: https://www.nature.com/srep/
+  color: "#8a3d3d"
+"BJNano":
+  url: https://www.beilstein-journals.org/bjnano/home
+  color: "#6b4f8a"
+"SMS":
+  url: https://www.sciencedirect.com/journal/superlattices-and-microstructures
+  color: "#8a6b2e"
+"ICECE":
+  color: "#555555"
+"TENCON":
+  color: "#555555"
+"TENSYMP":
+  color: "#555555"
+"5NANO":
+  color: "#555555"
+"ICTP":
+  color: "#555555"
+"FiO":
+  url: https://www.optica.org/
+  color: "#555555"
+"PhD":
+  color: "#b3a369"
