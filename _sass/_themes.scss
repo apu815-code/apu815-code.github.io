@@ -624,7 +624,7 @@ body::before {
     flex-direction: column !important;
     align-items: stretch !important;
     z-index: 1200 !important;
-    overflow-y: auto;
+    overflow: visible !important; /* lets the Research flyout come out to the right */
   }
 
   .navbar .container {
@@ -671,6 +671,7 @@ body::before {
     font-size: 0.95rem;
     font-weight: 500;
     text-align: left;
+    text-transform: capitalize; /* About, Research, Publications... (CV stays CV) */
   }
 
   .navbar .nav-link:hover,
@@ -755,4 +756,52 @@ body::before {
 
 @media (max-width: 991.98px) {
   .top-band-buet-text small { display: none; }
+}
+
+
+/* ---------- Research flyout: two buttons slide out to the right on hover ---------- */
+@media (min-width: 768px) {
+  .navbar .nav-item.dropdown { position: relative; }
+  .navbar .nav-item.dropdown > .nav-link::after { display: none !important; }
+  .navbar .nav-item.dropdown > .dropdown-menu {
+    display: none !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 100% !important;
+    right: auto !important;
+    margin: 0 0 0 0.9rem !important;
+    padding: 0.4rem !important;
+    min-width: 15rem;
+    background: #003057 !important;
+    border: 2px solid #b3a369 !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+  /* invisible bridge so the menu does not close while the mouse crosses the gap */
+  .navbar .nav-item.dropdown > .dropdown-menu::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; left: -1.1rem; width: 1.1rem;
+  }
+  .navbar .nav-item.dropdown:hover > .dropdown-menu,
+  .navbar .nav-item.dropdown:focus-within > .dropdown-menu { display: block !important; }
+  .navbar .dropdown-menu .dropdown-item {
+    display: block;
+    margin: 0.2rem 0;
+    padding: 0.55rem 0.9rem;
+    border-radius: 8px;
+    color: #ffffff !important;
+    background: transparent !important;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-transform: none;
+    white-space: nowrap;
+  }
+  .navbar .dropdown-menu .dropdown-item:hover { background: rgba(179, 163, 105, 0.28) !important; }
+  .navbar .dropdown-menu .dropdown-item.active { background: #b3a369 !important; color: #003057 !important; font-weight: 600; }
+}
+@media (max-width: 767px) {
+  .navbar .nav-link { text-transform: capitalize; }
+  .navbar .nav-item.dropdown > .dropdown-menu { display: block !important; position: static !important; border: 0 !important; box-shadow: none !important; padding-left: 1rem !important; }
 }
