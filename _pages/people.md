@@ -42,6 +42,6 @@ nav_order: 6
 
 ## B.Sc. students: former
 
-Abu Mohammad Saffat-Ee Huq · Anowarul Azim · Nishat Mahzabin Helaly · Rudra Biswas · Sariha Noor Azad · Jonaidul Islam Sikder · Abrar Md. Mahir · Abrar Jamil · Tanvir Ahmed Masum · Beig Rajibul Hasan · Nazmul Amin · Habibullah Khan · Md. Monirul Islam · Tanvir Hossain
+Abu Mohammad Saffat-Ee Huq · Anowarul Azim · Nishat Mahzabin Helaly · Rudra Biswas · Sariha Noor Azad · Jonaidul Islam Sikder · Abrar Md. Mahir · Abrar Jamil · Tanvir Ahmed Masum · Beig Rajibul Hasan · Nazmul Amin · Habibullah Khan · Md. Monirul Islam · Tanvir Hossain · Ahnaf Rashid Olee
 
 <!-- TODO: verify topics for Ridwan, Munna, Niloy Khan, Dhiman, Istiaque and the 2022-2025 M.Sc. students. Not yet decided by the professor (left off): K. M. Daiyan, Abhishek Das, Md. Nafiur Rahman, Md. Nazmus Sakib, Al Mamun Sarker, Md Nurul Huda Rifat, Md. Abdullah Al Mamun, Muhammad Fahad. Deliberately omitted: Md. Shahbaz Kamal Chowdhury. -->
