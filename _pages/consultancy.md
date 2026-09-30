@@ -59,7 +59,7 @@ I take on engineering work that draws on both research-level physics and hands-o
 | **Jatiya Sangsad Secretariat** | Independent origin-and-cause examination of a fire, including laboratory examination of evidence. |
 | **Ministry of Disaster Management** | Led a committee report on lightning-strike trends in Bangladesh. |
 | **National Board of Revenue (NBR)** | Technical expert on an inspection committee, representing BUET EEE. |
-| **Jamuna Electronics** | Reliability review of BLDC ceiling-fan drive electronics. |
+| **Jamuna Electronics** | Reliability review of BLDC ceiling-fan drive electronics (possible student projects: reverse-engineering the controller board and identifying its components; thermal and accelerated-life testing of the drive to support the warranty period; efficiency and EMI measurements of the drive). |
 | **CPGC, WASA, BWDB, BTRC, BIWTA, DESCO, DPDC, LP Gas** | Recruitment examinations for engineering posts, run through BRTC. |
 
 ## Work with me
