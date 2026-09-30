@@ -154,4 +154,16 @@
       </div>
     </progress>
   {% endif %}
+  <script>
+    /* Two-state theme toggle: light <-> dark (the default cycle also had a "system" step that looked like nothing happened) */
+    (function () {
+      try {
+        if (typeof toggleThemeSetting !== 'undefined' && typeof setThemeSetting !== 'undefined' && typeof determineComputedTheme !== 'undefined') {
+          toggleThemeSetting = function () {
+            setThemeSetting(determineComputedTheme() === 'dark' ? 'light' : 'dark');
+          };
+        }
+      } catch (e) {}
+    })();
+  </script>
 </header>
