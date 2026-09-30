@@ -823,3 +823,19 @@ body::before {
   font-weight: 700;
 }
 html[data-theme="dark"] .publications h2.bibliography { color: #b3a369 !important; }
+
+
+/* ---------- Top bar in Georgia Tech colours: navy band, white text, gold rule ---------- */
+@media (min-width: 768px) {
+  .top-band {
+    background: #003057 !important;
+    border-bottom: 4px solid #b3a369 !important;
+  }
+  .top-band .top-band-name { color: #ffffff !important; }
+  .top-band .top-band-title { color: #dfe6ec !important; }
+  .top-band .top-band-title a { color: #ffffff !important; border-bottom: 1px solid #b3a369 !important; }
+  .top-band .top-band-title a:hover { color: #eaaa00 !important; }
+  .top-band .top-band-buet-text b { color: #b3a369 !important; }
+  .top-band .top-band-buet:hover .top-band-buet-text b { color: #eaaa00 !important; }
+  .top-band .top-band-logo { background: #ffffff; border-radius: 50%; padding: 3px; height: 54px; width: 54px; object-fit: contain; }
+}
