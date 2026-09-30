@@ -805,3 +805,12 @@ body::before {
   .navbar .nav-link { text-transform: capitalize; }
   .navbar .nav-item.dropdown > .dropdown-menu { display: block !important; position: static !important; border: 0 !important; box-shadow: none !important; padding-left: 1rem !important; }
 }
+
+
+/* ---------- Theme toggle: two-state look (sun in light, moon in dark) + capitalized page titles ---------- */
+@media (min-width: 768px) {
+  html[data-theme-setting="system"] #light-toggle-system { display: none !important; }
+  html[data-theme-setting="system"][data-theme="light"] #light-toggle-light { display: inline-block !important; }
+  html[data-theme-setting="system"][data-theme="dark"] #light-toggle-dark { display: inline-block !important; }
+}
+.post-header .post-title, .post .post-title { text-transform: capitalize; }
