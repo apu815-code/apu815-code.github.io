@@ -13,7 +13,7 @@ profile:
   more_info: >
     <p>Room ECE 427, ECE Building</p>
     <p>Department of EEE, BUET</p>
-    <p>Dhaka 1000, Bangladesh</p>
+    <p>Dhaka 1205, Bangladesh</p>
     <p>PABX: 6566</p>
 
 selected_papers: true
