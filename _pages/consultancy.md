@@ -13,6 +13,7 @@ I take on engineering work that draws on both research-level physics and hands-o
   <div class="stat"><b>25+</b><span>years in electrical engineering</span></div>
   <div class="stat"><b>8+</b><span>public-sector recruitment programs</span></div>
   <div class="stat"><b>NFPA 921</b><span>fire-investigation methodology</span></div>
+  <div class="stat"><b>BNBC</b><span>Bangladesh National Building Code (electrical provisions)</span></div>
   <div class="stat"><b>BRTC</b><span>BUET testing &amp; consultation</span></div>
 </div>
 
