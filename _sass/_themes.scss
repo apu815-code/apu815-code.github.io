@@ -839,3 +839,20 @@ html[data-theme="dark"] .publications h2.bibliography { color: #b3a369 !importan
   .top-band .top-band-buet:hover .top-band-buet-text b { color: #eaaa00 !important; }
   .top-band .top-band-logo { background: #ffffff; border-radius: 50%; padding: 3px; height: 54px; width: 54px; object-fit: contain; }
 }
+
+
+/* ---------- Publications: journal badges, larger and always readable ---------- */
+.publications ol.bibliography li .abbr abbr.badge {
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  padding: 0.4rem 0.85rem !important;
+  white-space: normal;
+  color: #ffffff !important;
+  background-color: #003057 !important;
+  border: 1px solid #b3a369;
+}
+.publications ol.bibliography li:nth-child(3n + 2) .abbr abbr.badge { background-color: #b3a369 !important; color: #001b31 !important; }
+.publications ol.bibliography li:nth-child(3n + 3) .abbr abbr.badge { background-color: #d8c98a !important; color: #001b31 !important; }
+html[data-theme="dark"] .publications ol.bibliography li:nth-child(3n + 1) .abbr abbr.badge { background-color: #0d4a7a !important; color: #ffffff !important; }
