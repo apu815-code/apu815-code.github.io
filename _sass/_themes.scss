@@ -858,3 +858,18 @@ html[data-theme="dark"] .publications h2.bibliography { color: #b3a369 !importan
 html[data-theme="dark"] .publications ol.bibliography li:nth-child(3n + 1) .abbr abbr.badge { background-color: #0d4a7a !important; color: #ffffff !important; }
 
 /* end of theme overrides */
+
+
+/* ---------- Top bar: Georgia Tech gold band (matches gatech.edu header) ---------- */
+@media (min-width: 768px) {
+  .top-band {
+    background: #b3a369 !important;
+    border-bottom: 4px solid #003057 !important;
+  }
+  .top-band .top-band-name { color: #ffffff !important; }
+  .top-band .top-band-title { color: #003057 !important; font-weight: 500; }
+  .top-band .top-band-title a { color: #003057 !important; border-bottom: 1px solid #003057 !important; }
+  .top-band .top-band-title a:hover { color: #ffffff !important; border-bottom-color: #ffffff !important; }
+  .top-band .top-band-buet-text b { color: #ffffff !important; }
+  .top-band .top-band-buet:hover .top-band-buet-text b { color: #003057 !important; }
+}
