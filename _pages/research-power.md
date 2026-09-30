@@ -9,7 +9,7 @@ nav: false
 <p><a href="{{ '/research/' | relative_url }}">← Research</a></p>
 
 <div class="pill-row">
-  <span>Wireless power transfer</span><span>EV charging</span><span>Motor drives</span><span>Reliability</span><span>Solar PV integration</span><span>High voltage</span>
+  <span>Wireless power transfer</span><span>EV charging</span><span>Motor drives</span><span>Reliability</span><span>Solar PV integration</span><span>LCC-LCC compensation</span><span>PSO</span><span>High voltage</span>
 </div>
 
 ## Research directions
@@ -18,7 +18,7 @@ nav: false
   <div class="feature">
     <div class="ico">🚗</div>
     <h3>Wireless charging of electric vehicles</h3>
-    <p>Resonant inductive power transfer for EVs, including coil design, compensation networks and charging-grid interaction.</p>
+    <p>Resonant inductive power transfer for EVs with LCC-LCC compensation: coil design, disturbance analysis of uncoordinated and coordinated source-transition methods in PV/grid interchangeable systems, and charging-grid interaction.</p>
   </div>
   <div class="feature">
     <div class="ico">⚙️</div>
@@ -28,7 +28,7 @@ nav: false
   <div class="feature">
     <div class="ico">☀️</div>
     <h3>Solar PV in regional grids</h3>
-    <p>Optimal placement and sizing of distributed PV in Bangladesh's transmission network, using multi-criteria weighting and metaheuristic optimisation.</p>
+    <p>Optimal allocation of utility-scale photovoltaic plants in Bangladesh's regional transmission grid, using particle-swarm optimisation with static and time-series assessment.</p>
   </div>
 </div>
 
