@@ -15,7 +15,7 @@ children:
     permalink: /research/power/
 ---
 
-## Research theme: parameter provenance in multiscale device transport
+## Research theme: multiscale device transport
 
 Modern nanoscale devices are designed with a chain of models. Density functional theory gives the material, Wannier functions give a compact Hamiltonian, non-equilibrium Green's function (NEGF) transport gives the current, and TCAD gives the circuit-relevant device. A number that comes out at the end is only as trustworthy as every parameter that went in. My group works to make that chain **quantitative, reproducible and traceable**. We track the origin and uncertainty of each parameter, and we test which claims about a new material survive contact with realistic dielectrics, contacts and disorder.
 
