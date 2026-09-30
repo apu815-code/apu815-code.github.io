@@ -9,7 +9,7 @@ nav: false
 <p><a href="{{ '/research/' | relative_url }}">← Research</a></p>
 
 <div class="pill-row">
-  <span>Quantum transport</span><span>NEGF</span><span>DFT</span><span>Wannier functions</span><span>Topological insulators</span><span>2D materials</span><span>TCAD</span><span>FeFET memory</span><span>SOT memory</span><span>Predictive coding</span><span>CFET</span><span>Thermoelectrics</span>
+  <span>Quantum transport</span><span>NEGF</span><span>DFT</span><span>Wannier functions</span><span>Topological insulators</span><span>2D materials</span><span>TCAD</span><span>FeFET memory</span><span>SOT memory</span><span>Predictive coding</span><span>CFET</span><span>Photonic biosensors</span><span>PCF-SPR</span><span>Thermoelectrics</span>
 </div>
 
 ## Research directions
@@ -59,6 +59,11 @@ nav: false
     <div class="ico">🧱</div>
     <h3>Complementary FET (CFET)</h3>
     <p>Vertically stacked n- and p-type channels for continued scaling below the nanosheet node: electrostatics, parasitics and variability, studied with TCAD and compact models.</p>
+  </div>
+  <div class="feature">
+    <div class="ico">🧫</div>
+    <h3>Photonic biosensors</h3>
+    <p>Photonic-crystal-fibre surface-plasmon-resonance (PCF-SPR) sensors with molecularly imprinted polymer (MIP) sensing layers, designed for selective detection of pathogens such as faecal streptococci in drinking water.</p>
   </div>
   <div class="feature">
     <div class="ico">💡</div>
