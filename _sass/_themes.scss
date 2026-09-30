@@ -814,3 +814,12 @@ body::before {
   html[data-theme-setting="system"][data-theme="dark"] #light-toggle-dark { display: inline-block !important; }
 }
 .post-header .post-title, .post .post-title { text-transform: capitalize; }
+
+
+/* ---------- Publications: year headings on the left, always readable ---------- */
+.publications h2.bibliography {
+  text-align: left !important;
+  color: var(--global-theme-color) !important;
+  font-weight: 700;
+}
+html[data-theme="dark"] .publications h2.bibliography { color: #b3a369 !important; }
