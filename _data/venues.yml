@@ -33,5 +33,37 @@
 "FiO":
   url: https://www.optica.org/
   color: "#555555"
+"JPCM":
+  url: https://iopscience.iop.org/journal/0953-8984
+  color: "#2e6b8a"
+"NJP":
+  url: https://iopscience.iop.org/journal/1367-2630
+  color: "#2e6b8a"
+"PhysB":
+  url: https://www.sciencedirect.com/journal/physica-b-condensed-matter
+  color: "#8a6b2e"
+"CCM":
+  url: https://www.sciencedirect.com/journal/computational-condensed-matter
+  color: "#8a6b2e"
+"PRMaterials":
+  url: https://journals.aps.org/prmaterials/
+  color: "#1f3b5a"
+"IJCMSE":
+  url: https://www.worldscientific.com/worldscinet/ijcmse
+  color: "#3d7a5a"
+"DRM":
+  url: https://www.sciencedirect.com/journal/diamond-and-related-materials
+  color: "#8a6b2e"
+"JCG":
+  url: https://www.sciencedirect.com/journal/journal-of-crystal-growth
+  color: "#8a6b2e"
+"CECE":
+  color: "#555555"
+"EICT":
+  color: "#555555"
+"APCoRISE":
+  color: "#555555"
+"PECCII":
+  color: "#555555"
 "PhD":
   color: "#b3a369"
