@@ -873,3 +873,13 @@ html[data-theme="dark"] .publications ol.bibliography li:nth-child(3n + 1) .abbr
   .top-band .top-band-buet-text b { color: #ffffff !important; }
   .top-band .top-band-buet:hover .top-band-buet-text b { color: #003057 !important; }
 }
+
+
+/* ---------- Top ribbon: taller band and larger text ---------- */
+:root { --top-band-height: 116px; }
+@media (min-width: 768px) {
+  .top-band .top-band-name { font-size: 2.4rem !important; }
+  .top-band .top-band-title { font-size: 1.12rem !important; margin-top: 0.3rem; }
+  .top-band .top-band-buet-text b { font-size: 2rem !important; }
+  .top-band .top-band-logo { height: 84px !important; width: 84px !important; }
+}
