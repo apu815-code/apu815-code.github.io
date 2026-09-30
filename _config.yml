@@ -13,7 +13,7 @@ description: > # the ">" symbol means to ignore newlines until "footer_text:"
   Prof. Dr. Mahbub Alam, Department of Electrical and Electronic Engineering, BUET. Computational nanoelectronics,
   quantum transport and topological devices; teaching; and engineering consultancy in forensic electrical investigation and testing.
 footer_text: >
-  Department of EEE, Bangladesh University of Engineering and Technology (BUET), Dhaka 1000, Bangladesh.
+  Department of EEE, Bangladesh University of Engineering and Technology (BUET), Dhaka 1205, Bangladesh.
   Built with <a href="https://github.com/alshedivat/al-folio">al-folio</a>, hosted on <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
 keywords: Mahbub Alam, BUET, EEE, nanoelectronics, quantum transport, NEGF, DFT, topological insulator, TIFET, 2D materials, forensic electrical engineering, fire investigation, consultancy # add your own keywords or leave empty
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
