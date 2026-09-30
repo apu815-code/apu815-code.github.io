@@ -9,7 +9,7 @@ nav: false
 <p><a href="{{ '/research/' | relative_url }}">← Research</a></p>
 
 <div class="pill-row">
-  <span>Quantum transport</span><span>NEGF</span><span>DFT</span><span>Wannier functions</span><span>Topological insulators</span><span>2D materials</span><span>TCAD</span><span>FeFET</span><span>Thermoelectrics</span>
+  <span>Quantum transport</span><span>NEGF</span><span>DFT</span><span>Wannier functions</span><span>Topological insulators</span><span>2D materials</span><span>TCAD</span><span>FeFET memory</span><span>SOT memory</span><span>Predictive coding</span><span>CFET</span><span>Thermoelectrics</span>
 </div>
 
 ## Research directions
@@ -31,9 +31,34 @@ nav: false
     <p>Pressure- and strain-engineered Bi₂Te₃ and related topological thermoelectrics, using DFT + spin-orbit coupling and Boltzmann transport (BoltzTraP2).</p>
   </div>
   <div class="feature">
+    <div class="ico">🧬</div>
+    <h3>Materials research</h3>
+    <p>First-principles screening and design of 2D, topological and thermoelectric materials: band structure, spin–orbit coupling, Wannier interpolation and topology (Z₂, nodal lines), with attention to contacts, dielectrics and stability.</p>
+  </div>
+  <div class="feature">
+    <div class="ico">🖥️</div>
+    <h3>TCAD simulations</h3>
+    <p>Device-level simulation in Sentaurus and Silvaco: 3D electrostatics, short-channel and gate-all-around structures, drift-diffusion and hydrodynamic models, calibrated against measurements and atomistic results.</p>
+  </div>
+  <div class="feature">
     <div class="ico">🧠</div>
-    <h3>Ferroelectric FETs and neuromorphic hardware</h3>
-    <p>Device-aware learning hardware: dendritic multi-gate FeFETs simulated across TCAD, SPICE and spiking networks, with attention to device non-idealities.</p>
+    <h3>Ferroelectric FET (FeFET) memory</h3>
+    <p>Ferroelectric-gate transistors for non-volatile memory and in-memory computing: polarization switching, retention and endurance, multi-gate and dendritic FeFETs, simulated across TCAD and SPICE.</p>
+  </div>
+  <div class="feature">
+    <div class="ico">🧲</div>
+    <h3>SOT memory</h3>
+    <p>Spin–orbit-torque magnetic memory: topological-insulator and heavy-metal spin sources, spin textures in Bi₂Se₃-type nanoribbons, and switching efficiency and energy of SOT devices.</p>
+  </div>
+  <div class="feature">
+    <div class="ico">🔁</div>
+    <h3>Predictive coding</h3>
+    <p>Predictive-coding networks mapped onto device-aware hardware, so that learning rules run on FeFET and other emerging devices with their real non-idealities.</p>
+  </div>
+  <div class="feature">
+    <div class="ico">🧱</div>
+    <h3>Complementary FET (CFET)</h3>
+    <p>Vertically stacked n- and p-type channels for continued scaling below the nanosheet node: electrostatics, parasitics and variability, studied with TCAD and compact models.</p>
   </div>
   <div class="feature">
     <div class="ico">💡</div>
