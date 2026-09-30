@@ -9,7 +9,7 @@ nav: false
 <p><a href="{{ '/research/' | relative_url }}">← Research</a></p>
 
 <div class="pill-row">
-  <span>Quantum transport</span><span>NEGF</span><span>DFT</span><span>Wannier functions</span><span>Topological insulators</span><span>2D materials</span><span>TCAD</span><span>FeFET memory</span><span>SOT memory</span><span>Predictive coding</span><span>CFET</span><span>Photonic biosensors</span><span>PCF-SPR</span><span>Thermoelectrics</span>
+  <span>Quantum transport</span><span>NEGF</span><span>DFT</span><span>Wannier functions</span><span>Topological insulators</span><span>2D materials</span><span>TCAD</span><span>FeFET memory</span><span>SOT memory</span><span>Predictive coding</span><span>CFET</span><span>Photonic biosensors</span><span>PCF-SPR</span><span>Contacts and Fermi-level pinning</span><span>Thermoelectrics</span>
 </div>
 
 ## Research directions
@@ -24,6 +24,11 @@ nav: false
     <div class="ico">🧊</div>
     <h3>2D-material transistors</h3>
     <p>Borophene, black phosphorus (gate-all-around nanosheets), graphene nanoribbons, graphynes, bismuthene and MoSe₂ nanoribbons. We look at electric-field-induced gap engineering and short-channel limits.</p>
+  </div>
+  <div class="feature">
+    <div class="ico">🔌</div>
+    <h3>Metal contacts to 2D semiconductors</h3>
+    <p>Fermi-level pinning at metallic NbₓW₁₋ₓSe₂/WSe₂ van der Waals contacts: first-principles (PBE+SOC+D3) band alignment, metal-induced gap states and the charge-neutrality level, showing that the small hole barrier comes from valence-side pinning and persists under Nb/W alloying. With Ahnaf Rashid Olee.</p>
   </div>
   <div class="feature">
     <div class="ico">🔥</div>
