@@ -30,7 +30,7 @@ latest_posts:
 
 I am a Professor in the Department of Electrical and Electronic Engineering at BUET, where I have taught since 1999. My research is in **computational nanoelectronics**. I study how electrons move through nanoscale and quantum materials, and how that transport can be turned into devices: transistors, detectors and energy converters.
 
-The core of my group's work is a **first-principles-to-device simulation chain**. It starts with density functional theory (Quantum ESPRESSO), uses maximally localized Wannier functions to build tight-binding Hamiltonians (Wannier90, Z2Pack), feeds them to non-equilibrium Green's function (NEGF) quantum transport, and scales up to TCAD device simulation (Sentaurus, Silvaco). A long-term goal is **parameter provenance**: keeping track of where each device parameter comes from, and how uncertain it is, as it passes through every step of that chain.
+The core of my group's work is a **first-principles-to-device simulation chain**. It starts with density functional theory (Quantum ESPRESSO), uses maximally localized Wannier functions to build tight-binding Hamiltonians (Wannier90, Z2Pack), feeds them to non-equilibrium Green's function (NEGF) quantum transport, and scales up to TCAD device simulation (Sentaurus, Silvaco).
 
 Current topics include:
 
