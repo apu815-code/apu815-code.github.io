@@ -60,6 +60,7 @@ I take on engineering work that draws on both research-level physics and hands-o
 | **Ministry of Disaster Management** | Led a committee report on lightning-strike trends in Bangladesh. |
 | **National Board of Revenue (NBR)** | Technical expert on an inspection committee, representing BUET EEE. |
 | **Jamuna Electronics** | Reliability review of BLDC ceiling-fan drive electronics (possible student projects: reverse-engineering the controller board and identifying its components; thermal and accelerated-life testing of the drive to support the warranty period; efficiency and EMI measurements of the drive). |
+| **Adex** | Automatic voltage regulator (AVR) work (possible student projects: AVR modelling and controller tuning; bench testing of the regulator against generator excitation requirements; transient-response and stability studies).
 | **CPGC, WASA, BWDB, BTRC, BIWTA, DESCO, DPDC, LP Gas** | Recruitment examinations for engineering posts, run through BRTC. |
 
 ## Work with me
