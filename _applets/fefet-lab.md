@@ -1,7 +1,7 @@
 ---
 layout: page
 title: FeFET Lab
-description: An interactive ferroelectric-memory lab: switching, memory window and read/write behaviour of a FeFET.
+description: "An interactive ferroelectric-memory lab: switching, memory window and read/write behaviour of a FeFET."
 importance: 3
 tags: [FeFET, memory, teaching]
 applet_src: /assets/applets/mem.html
