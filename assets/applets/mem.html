@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FeFET Lab — Ferroelectric Memory, Interactive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c131d; --panel:#121e2e; --panel2:#0e1826; --line:#22344b;
+  --ink:#e8f0f8; --mut:#8ea6bf; --faint:#5c728a;
+  --amber:#ffb454; --cyan:#4fd8e8; --mint:#5ee6a8; --coral:#ff6b7a; --gold:#ffd47e;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{color-scheme:dark;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:15.5px;line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-2;
+  background-image:linear-gradient(rgba(79,216,232,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(79,216,232,.045) 1px,transparent 1px);
+  background-size:44px 44px;animation:gridDrift 90s linear infinite}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(900px 500px at 12% -5%,rgba(79,216,232,.10),transparent 60%),
+  radial-gradient(800px 600px at 95% 110%,rgba(255,180,84,.09),transparent 60%),
+  radial-gradient(600px 400px at 70% 20%,rgba(94,230,168,.05),transparent 60%)}
+@keyframes gridDrift{to{background-position:440px 880px,880px 440px}}
+.wrap{max-width:1380px;margin:0 auto;padding:0 28px}
+::selection{background:rgba(255,180,84,.3)}
+#fatal{display:none;position:fixed;top:0;left:0;right:0;z-index:99;background:#7d1425;color:#ffd9dd;
+  font-family:monospace;font-size:13px;padding:10px 16px;border-bottom:2px solid #ff6b7a}
+#bootmsg{font-family:monospace;font-size:12px;color:#5ee6a8;background:#10251c;border:1px solid #2c5546;
+  border-radius:6px;padding:8px 14px;display:inline-block;margin-top:14px}
+
+.mast{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:end;padding:58px 0 26px}
+.kicker{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.34em;color:var(--cyan);text-transform:uppercase}
+.mast h1{font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:clamp(46px,7vw,88px);line-height:.95;margin:10px 0 14px}
+.mast h1 em{font-style:normal;color:var(--amber);text-shadow:0 0 34px rgba(255,180,84,.35)}
+.mast .sub{color:var(--mut);max-width:56ch;font-size:16.5px}
+.mast-r{text-align:center}
+.mast-r .bezel{border:1px solid var(--line);border-radius:12px;padding:12px 12px 8px;
+  background:linear-gradient(180deg,#13202f,#0d1622);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 12px 30px rgba(0,0,0,.35)}
+.mast-r canvas{display:block;width:164px;height:164px}
+.mast-r span{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.22em;color:var(--faint)}
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;background:rgba(14,24,38,.6)}
+.tk{display:inline-flex;white-space:nowrap;padding:9px 0;animation:tk 36s linear infinite;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--faint);letter-spacing:.08em}
+.tk i{font-style:normal;color:var(--cyan);margin:0 14px}
+@keyframes tk{to{transform:translateX(-50%)}}
+
+section{margin:72px 0}
+.panel{background:linear-gradient(180deg,#13202f,var(--panel2));border:1px solid var(--line);border-radius:10px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 14px 34px rgba(0,0,0,.35);padding:16px 18px 18px}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.ph h2{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:11.5px;letter-spacing:.24em;color:var(--mut);text-transform:uppercase;display:flex;align-items:center;gap:9px}
+.led{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 8px var(--mint);animation:led 2.2s ease-in-out infinite}
+@keyframes led{50%{opacity:.35}}
+.mode-chip{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;color:var(--faint);border:1px solid var(--line);padding:3px 10px;border-radius:20px}
+.mode-chip.hot{color:var(--amber);border-color:var(--amber)}
+canvas.fit{display:block;width:100%}
+#devCv{aspect-ratio:960/500;height:auto}
+#pvCv,#ivCv{aspect-ratio:16/9.4;height:auto}
+#wvCv{aspect-ratio:960/84;height:auto}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.lg{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;color:var(--mut);
+  border:1px solid var(--line);border-radius:4px;padding:3px 9px;background:rgba(255,255,255,.02)}
+.lg s{text-decoration:none;margin-right:6px}
+.status{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.stat-chip{flex:1;min-width:120px;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:rgba(10,18,30,.55)}
+.stat-chip small{display:block;font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.22em;color:var(--faint)}
+.stat-chip b{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:17px;color:var(--ink)}
+#stateBdg.on{color:var(--mint);text-shadow:0 0 16px rgba(94,230,168,.5)}
+#stateBdg.off{color:var(--coral)}
+#stateBdg.mid{color:var(--mut)}
+
+.devbox{position:relative}
+#verdict{position:absolute;right:22px;bottom:22px;max-width:340px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.5;
+  background:rgba(10,18,30,.92);border:1px solid var(--mint);border-radius:8px;padding:11px 14px;color:var(--ink);
+  opacity:0;transform:translateY(10px);transition:.35s;pointer-events:none;box-shadow:0 0 26px rgba(94,230,168,.18)}
+#verdict.show{opacity:1;transform:none}
+#verdict.z{border-color:var(--coral);box-shadow:0 0 26px rgba(255,107,122,.18)}
+
+.lab{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:18px;margin-top:44px}
+.col-l,.col-r{display:flex;flex-direction:column;gap:18px;min-width:0}
+
+.ctl-row{margin-bottom:18px}
+.ctl-lab{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;color:var(--mut);margin-bottom:8px;text-transform:uppercase}
+.ctl-lab output{color:var(--amber)}
+input[type=range]{-webkit-appearance:none;width:100%;height:26px;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:linear-gradient(90deg,var(--coral),#2c4763 46%,#2c4763 54%,var(--amber));border:1px solid #1a2a3f}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-8px;border-radius:50%;
+  background:#0c131d;border:2px solid var(--gold);box-shadow:0 0 0 4px rgba(255,212,126,.12),0 0 14px rgba(255,212,126,.4)}
+input[type=range]::-moz-range-track{height:8px;border-radius:4px;background:#2c4763}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#0c131d;border:2px solid var(--gold)}
+input[type=range].slim::-webkit-slider-runnable-track{height:5px;background:#1c2f47}
+input[type=range].slim::-webkit-slider-thumb{width:15px;height:15px;margin-top:-6px;border-color:var(--cyan);box-shadow:0 0 8px rgba(79,216,232,.4)}
+input[type=range]:disabled{opacity:.4}
+.btnrow{display:flex;flex-wrap:wrap;gap:10px}
+.btn{font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink);background:#16283c;border:1px solid #2c4763;border-radius:7px;padding:12px 18px;cursor:pointer;
+  transition:transform .16s,box-shadow .16s,background .16s}
+.btn small{display:block;font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.1em;color:var(--faint);text-transform:none;margin-top:2px}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(1px)}
+.btn-prog{border-color:var(--amber);color:var(--amber)}
+.btn-prog:hover{box-shadow:0 8px 24px rgba(0,0,0,.4),0 0 18px rgba(255,180,84,.35);background:#1e2c34}
+.btn-erase{border-color:var(--coral);color:var(--coral)}
+.btn-erase:hover{box-shadow:0 8px 24px rgba(0,0,0,.4),0 0 18px rgba(255,107,122,.35);background:#241c26}
+.btn-read{border-color:var(--mint);color:var(--mint)}
+.btn-read:hover{box-shadow:0 8px 24px rgba(0,0,0,.4),0 0 18px rgba(94,230,168,.35);background:#14251f}
+.btn-sweep{border-color:var(--cyan);color:var(--cyan)}
+.btn-sweep:hover{box-shadow:0 8px 24px rgba(0,0,0,.4),0 0 18px rgba(79,216,232,.35);background:#12283a}
+.params{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px 22px;border-top:1px dashed var(--line);padding-top:16px}
+.hint{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin-top:14px}
+kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;font-size:10px;color:var(--mut)}
+
+.try{display:flex;flex-wrap:wrap;gap:14px}
+.step{flex:1;min-width:260px;display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;
+  padding:16px 18px;background:rgba(14,24,38,.5);transition:transform .2s,border-color .2s}
+.step:hover{transform:translateY(-3px);border-color:var(--faint)}
+.step .n{font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:30px;line-height:1}
+.step:nth-child(1) .n{color:var(--cyan)}.step:nth-child(2) .n{color:var(--amber)}.step:nth-child(3) .n{color:var(--mint)}
+.step p{font-size:13.5px;color:var(--mut)}.step p b{color:var(--ink);font-weight:600}
+
+.acts-head h2,.sec-head h2{font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:clamp(28px,3.6vw,44px);line-height:1.05}
+.acts-head p,.sec-head p{color:var(--mut);max-width:64ch;margin-top:10px}
+.acts-head{margin-bottom:8px}
+.act{display:grid;grid-template-columns:170px minmax(0,1fr) minmax(240px,330px);gap:36px;align-items:center;padding:40px 0;border-top:1px solid var(--line)}
+.act-num{font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:96px;line-height:1;color:transparent;-webkit-text-stroke:1.5px #33506f}
+.act-num span{display:block;-webkit-text-stroke:0;font-size:13px;letter-spacing:.3em;color:var(--amber);font-family:"IBM Plex Mono",monospace;margin-top:6px}
+.act h3{font-family:"Chakra Petch",sans-serif;font-size:22px;margin-bottom:8px}
+.act p{color:var(--mut);font-size:14.5px}
+.act p b{color:var(--ink)}
+.act.flip .act-svg{order:-1}
+.act-svg svg{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:10px;background:#0d1724;animation:float 6s ease-in-out infinite alternate}
+@keyframes float{to{transform:translateY(-6px)}}
+@media(max-width:900px){.act{grid-template-columns:1fr}.act-num{font-size:60px}.act.flip .act-svg{order:0}}
+
+.mat{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,4fr);gap:44px;align-items:start}
+.mat .body p{color:var(--mut);margin-bottom:14px}
+.mat .body p b{color:var(--ink)}
+.cite{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--faint);border-left:2px solid var(--amber);padding-left:12px;margin-top:18px}
+.stats{display:flex;flex-direction:column;gap:12px}
+.stat{display:flex;align-items:baseline;gap:18px;border-left:3px solid var(--amber);padding:12px 18px;
+  background:linear-gradient(90deg,rgba(255,180,84,.07),transparent 70%);transition:transform .2s}
+.stat:hover{transform:translateX(8px)}
+.stat:nth-child(2){border-color:var(--cyan);background:linear-gradient(90deg,rgba(79,216,232,.07),transparent 70%)}
+.stat:nth-child(3){border-color:var(--mint);background:linear-gradient(90deg,rgba(94,230,168,.07),transparent 70%)}
+.stat:nth-child(4){border-color:var(--coral);background:linear-gradient(90deg,rgba(255,107,122,.07),transparent 70%)}
+.stat:nth-child(5){border-color:var(--gold)}
+.stat:nth-child(6){border-color:var(--cyan);background:linear-gradient(90deg,rgba(79,216,232,.07),transparent 70%)}
+.stat b{font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:30px;min-width:130px}
+.stat div{font-size:13px;color:var(--mut)}.stat div strong{color:var(--ink);display:block;font-size:14px}
+@media(max-width:900px){.mat{grid-template-columns:1fr}}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line)}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
+th.hl,td.hl{background:rgba(255,180,84,.06);border-left:1px solid rgba(255,180,84,.25);border-right:1px solid rgba(255,180,84,.25)}
+th.hl{color:var(--amber)}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:rgba(79,216,232,.05)}
+td:first-child{color:var(--faint);font-family:"IBM Plex Mono",monospace;font-size:12px}
+
+footer{border-top:1px solid var(--line);margin-top:90px;padding:34px 0 60px;color:var(--faint);font-size:12.5px}
+footer b{color:var(--mut)}
+footer .model{font-family:"IBM Plex Mono",monospace;font-size:11.5px;line-height:1.8;margin-top:10px;max-width:100ch}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media(max-width:1080px){.lab{grid-template-columns:1fr}.mast{grid-template-columns:1fr}.mast-r{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="fatal"></div>
+
+<header class="mast wrap">
+  <div class="mast-l">
+    <div class="kicker">Semiconductor memory · interactive bench</div>
+    <h1>The <em>FeFET</em><br>Ferroelectric Transistor</h1>
+    <p class="sub">One transistor. One ferroelectric layer. A bit stored as the direction of electric dipoles — no floating gate, no capacitor, no refresh. Drag the gate voltage, fire pulses, and watch the physics on the scopes.</p>
+    <div id="bootmsg">⏳ loading simulation…</div>
+  </div>
+  <div class="mast-r">
+    <div class="bezel"><canvas id="hdCv" width="164" height="164"></canvas><span>P–E LOOP · LIVE MODEL</span></div>
+  </div>
+</header>
+<div class="ticker"><div class="tk" id="tk"></div></div>
+
+<main class="wrap">
+
+<section class="lab" id="lab">
+  <div class="col-l">
+    <div class="panel">
+      <div class="ph">
+        <h2><span class="led"></span>DEVICE CROSS-SECTION · n-FeFET</h2>
+        <span class="mode-chip" id="modeChip">● IDLE</span>
+      </div>
+      <div class="devbox">
+        <canvas id="devCv" class="fit"></canvas>
+        <div id="verdict"></div>
+      </div>
+      <div class="legend">
+        <span class="lg"><s style="color:var(--cyan)">↑</s>P up · erased · high V<sub>TH</sub></span>
+        <span class="lg"><s style="color:var(--amber)">↓</s>P down · programmed · low V<sub>TH</sub></span>
+        <span class="lg"><s style="color:var(--cyan)">●</s>electron</span>
+        <span class="lg"><s style="color:var(--amber)">+</s>bound charge</span>
+        <span class="lg"><s style="color:#6f86a6">−</s>depletion ions</span>
+      </div>
+      <div class="status">
+        <div class="stat-chip"><small>STORED STATE</small><b id="stateBdg" class="off">0 · OFF</b></div>
+        <div class="stat-chip"><small>V_TH</small><b id="vthVal">—</b></div>
+        <div class="stat-chip"><small>POLARIZATION</small><b id="pVal">—</b></div>
+        <div class="stat-chip"><small>I_D @ V_G</small><b id="idVal">—</b></div>
+        <div class="stat-chip"><small>MEMORY WINDOW</small><b id="winVal">—</b></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><h2><span class="led"></span>GATE CONTROL</h2><span class="mode-chip">V_DS = 0.1 V</span></div>
+      <div class="ctl-row">
+        <div class="ctl-lab"><span>Gate voltage V_G</span><output id="vgVal">0.00 V</output></div>
+        <input type="range" id="vgR" min="-3.5" max="3.5" step="0.01" value="0">
+      </div>
+      <div class="btnrow">
+        <button class="btn btn-prog" id="btnProg">⚡ Program<small>+V_P pulse → P ↓</small></button>
+        <button class="btn btn-erase" id="btnErase">⚡ Erase<small>−V_P pulse → P ↑</small></button>
+        <button class="btn btn-read" id="btnRead">◎ Read<small>sense at V_read</small></button>
+        <button class="btn btn-sweep" id="btnSweep">▶ Sweep<small>trace both loops</small></button>
+      </div>
+      <div class="params">
+        <div>
+          <div class="ctl-lab"><span>Pulse V_P</span><output id="vpVal">3.2 V</output></div>
+          <input type="range" class="slim" id="vpR" min="2.4" max="4" step="0.05" value="3.2">
+        </div>
+        <div>
+          <div class="ctl-lab"><span>Read V_read</span><output id="vrVal">0.00 V</output></div>
+          <input type="range" class="slim" id="vrR" min="-0.5" max="0.8" step="0.05" value="0">
+        </div>
+        <div>
+          <div class="ctl-lab"><span>P_r</span><output id="prVal">20 µC/cm²</output></div>
+          <input type="range" class="slim" id="prR" min="6" max="40" step="1" value="20">
+        </div>
+        <div>
+          <div class="ctl-lab"><span>t_FE</span><output id="tVal">10 nm</output></div>
+          <input type="range" class="slim" id="tR" min="4" max="20" step="0.5" value="10">
+        </div>
+        <div>
+          <div class="ctl-lab"><span>Coercive V_C</span><output id="vcVal">1.40 V</output></div>
+          <input type="range" class="slim" id="vcR" min="0.6" max="2.4" step="0.05" value="1.4">
+        </div>
+      </div>
+      <p class="hint">Keys: <kbd>←</kbd><kbd>→</kbd> nudge V_G · <kbd>P</kbd> program · <kbd>E</kbd> erase · <kbd>R</kbd> read · <kbd>S</kbd> sweep</p>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><h2><span class="led"></span>GATE WAVEFORM V_G(t)</h2></div>
+      <canvas id="wvCv" class="fit"></canvas>
+    </div>
+  </div>
+
+  <div class="col-r">
+    <div class="panel">
+      <div class="ph"><h2><span class="led"></span>Ferroelectric hysteresis · P–V</h2></div>
+      <canvas id="pvCv" class="fit"></canvas>
+    </div>
+    <div class="panel">
+      <div class="ph"><h2><span class="led"></span>Transfer curve · log I_D–V_G</h2></div>
+      <canvas id="ivCv" class="fit"></canvas>
+    </div>
+  </div>
+</section>
+
+<section class="try reveal">
+  <div class="step"><span class="n">1</span><p><b>Drag V_G slowly from −3 V to +3 V.</b> Each domain flips at its own coercive voltage — the P–V scope traces the hysteresis loop as you go.</p></div>
+  <div class="step"><span class="n">2</span><p><b>Press SWEEP.</b> The I_D–V_G scope draws two split curves. The gap between them, ΔV_TH, is the memory window — set by P_r and t_FE.</p></div>
+  <div class="step"><span class="n">3</span><p><b>PROGRAM, then READ.</b> At V_G = 0 V the channel conducts → stored “1”. Now ERASE and READ again → “0”. The read is non-destructive.</p></div>
+</section>
+
+<section>
+  <div class="acts-head reveal">
+    <h2>The memory cycle, in four acts</h2>
+    <p>The ferroelectric layer (here Hf₀.₅Zr₀.₅O₂) sits inside the gate stack. Its dipoles can be switched by the gate field and — crucially — they stay switched when power is removed. That remanent polarization shifts the transistor's threshold voltage, and that shift <i>is</i> the bit.</p>
+  </div>
+
+  <div class="act reveal">
+    <div class="act-num">01<span>WRITE</span></div>
+    <div><h3>Program — flip the dipoles down</h3>
+    <p>A positive gate pulse beyond the coercive voltage (+V_P &gt; V_C) snaps the dipoles toward the channel. Their bound positive charge at the interface attracts electrons, so the threshold voltage drops by <b>ΔV_TH = P_r·t_FE / (ε₀·ε_FE)</b>. Switching is intrinsic to the crystal lattice — nanoseconds, no charge pumping.</p></div>
+    <div class="act-svg"><svg viewBox="0 0 300 175">
+      <rect x="60" y="12" width="180" height="22" fill="#6e5c38" stroke="#8a7448"/>
+      <rect x="60" y="38" width="180" height="46" fill="#12242f" stroke="#2c4763"/>
+      <g stroke="#ffb454" stroke-width="2.5"><line x1="105" y1="46" x2="105" y2="74"/><line x1="150" y1="46" x2="150" y2="74"/><line x1="195" y1="46" x2="195" y2="74"/></g>
+      <g fill="#ffb454"><path d="M100 74h10l-5 9z"/><path d="M145 74h10l-5 9z"/><path d="M190 74h10l-5 9z"/></g>
+      <g fill="#ffb454" font-family="monospace" font-size="12"><text x="83" y="96">+</text><text x="118" y="96">+</text><text x="153" y="96">+</text><text x="188" y="96">+</text><text x="222" y="96">+</text></g>
+      <g fill="#4fd8e8"><circle cx="90" cy="110" r="3.5"/><circle cx="125" cy="112" r="3.5"/><circle cx="160" cy="109" r="3.5"/><circle cx="195" cy="112" r="3.5"/><circle cx="228" cy="110" r="3.5"/></g>
+      <rect x="40" y="120" width="220" height="36" fill="#14203a" stroke="#2a3f5c"/>
+      <text x="252" y="28" fill="#8ea6bf" font-family="monospace" font-size="10">TiN</text>
+      <text x="252" y="64" fill="#ffb454" font-family="monospace" font-size="10">HfO₂</text>
+      <text x="252" y="100" fill="#8ea6bf" font-family="monospace" font-size="10">IL</text>
+      <text x="48" y="142" fill="#8ea6bf" font-family="monospace" font-size="10">p-Si · e⁻ accumulate</text>
+      <text x="60" y="168" fill="#ffb454" font-family="monospace" font-size="11">V_G pulse &gt; +V_C → V_TH drops</text>
+    </svg></div>
+  </div>
+
+  <div class="act flip reveal">
+    <div class="act-num">02<span>RETAIN</span></div>
+    <div><h3>Hold — a bistable energy landscape</h3>
+    <p>Remove all power and the bit stays put. The ferroelectric phase has a <b>double-well free energy</b>: two stable polarization orientations separated by a barrier E_b. Thermal energy at room temperature can't kick a domain over the barrier, so the state is non-volatile for years — a bistable switch built into the material itself.</p></div>
+    <div class="act-svg"><svg viewBox="0 0 300 175">
+      <path d="M25 60 C60 60 70 122 105 122 C138 122 138 62 150 62 C162 62 162 122 195 122 C230 122 240 60 275 60" fill="none" stroke="#4fd8e8" stroke-width="2"/>
+      <circle cx="195" cy="113" r="7" fill="#ffb454"/>
+      <circle cx="195" cy="113" r="12" fill="none" stroke="#ffb454" opacity=".4"/>
+      <line x1="150" y1="62" x2="150" y2="140" stroke="#5c728a" stroke-dasharray="3 4"/>
+      <text x="158" y="86" fill="#ffd47e" font-family="monospace" font-size="11">E_b</text>
+      <text x="82" y="145" fill="#4fd8e8" font-family="monospace" font-size="12">P ↑ (“0”)</text>
+      <text x="172" y="145" fill="#ffb454" font-family="monospace" font-size="12">P ↓ (“1”)</text>
+      <text x="25" y="35" fill="#8ea6bf" font-family="monospace" font-size="10">free energy F(P)</text>
+      <text x="25" y="165" fill="#5c728a" font-family="monospace" font-size="10">orthorhombic HfO₂ · two stable minima</text>
+    </svg></div>
+  </div>
+
+  <div class="act reveal">
+    <div class="act-num">03<span>READ</span></div>
+    <div><h3>Read — probe with a small voltage</h3>
+    <p>Apply a modest V_read between the two threshold voltages. The programmed cell (low V_TH) conducts — microamps, logic <b>1</b>. The erased cell (high V_TH) is off — picoamps, logic <b>0</b>. Because V_read stays far below V_C, the dipoles don't move: unlike DRAM, <b>the read doesn't destroy the data</b>.</p></div>
+    <div class="act-svg"><svg viewBox="0 0 300 175">
+      <polyline points="40,20 40,140 280,140" fill="none" stroke="#5c728a" stroke-width="1.5"/>
+      <path d="M60 132 C120 132 128 40 175 34 L260 28" fill="none" stroke="#ffb454" stroke-width="2"/>
+      <path d="M110 134 C170 134 178 46 225 40 L260 37" fill="none" stroke="#4fd8e8" stroke-width="2"/>
+      <line x1="190" y1="30" x2="190" y2="140" stroke="#5ee6a8" stroke-dasharray="4 4"/>
+      <circle cx="190" cy="35" r="5" fill="#5ee6a8"/><circle cx="190" cy="133" r="5" fill="#ff6b7a"/>
+      <text x="198" y="30" fill="#5ee6a8" font-family="monospace" font-size="11">→ 1 (ON)</text>
+      <text x="198" y="128" fill="#ff6b7a" font-family="monospace" font-size="11">→ 0 (OFF)</text>
+      <text x="176" y="155" fill="#8ea6bf" font-family="monospace" font-size="10">V_read</text>
+      <text x="14" y="16" fill="#8ea6bf" font-family="monospace" font-size="10">log I_D</text>
+      <text x="252" y="155" fill="#8ea6bf" font-family="monospace" font-size="10">V_G</text>
+    </svg></div>
+  </div>
+
+  <div class="act flip reveal">
+    <div class="act-num">04<span>ERASE</span></div>
+    <div><h3>Erase — flip back with a negative pulse</h3>
+    <p>A negative pulse (−V_P &lt; −V_C) reorients the dipoles toward the gate. The bound charge at the channel interface turns negative, the surface depletes of electrons, and V_TH rises again. The cell returns to “0” — and the whole loop can repeat <b>10⁵–10⁹ times</b> before fatigue sets in.</p></div>
+    <div class="act-svg"><svg viewBox="0 0 300 175">
+      <rect x="60" y="12" width="180" height="22" fill="#6e5c38" stroke="#8a7448"/>
+      <rect x="60" y="38" width="180" height="46" fill="#12242f" stroke="#2c4763"/>
+      <g stroke="#4fd8e8" stroke-width="2.5"><line x1="105" y1="76" x2="105" y2="48"/><line x1="150" y1="76" x2="150" y2="48"/><line x1="195" y1="76" x2="195" y2="48"/></g>
+      <g fill="#4fd8e8"><path d="M100 48h10l-5 -9z"/><path d="M145 48h10l-5 -9z"/><path d="M190 48h10l-5 -9z"/></g>
+      <g fill="#4fd8e8" font-family="monospace" font-size="12"><text x="83" y="96">−</text><text x="118" y="96">−</text><text x="153" y="96">−</text><text x="188" y="96">−</text><text x="222" y="96">−</text></g>
+      <rect x="40" y="120" width="220" height="36" fill="#14203a" stroke="#2a3f5c"/>
+      <g fill="#6f86a6" font-family="monospace" font-size="11"><text x="95" y="132">−</text><text x="140" y="140">−</text><text x="185" y="132">−</text></g>
+      <text x="252" y="64" fill="#4fd8e8" font-family="monospace" font-size="10">HfO₂</text>
+      <text x="48" y="142" fill="#8ea6bf" font-family="monospace" font-size="10">p-Si · depleted</text>
+      <text x="60" y="168" fill="#4fd8e8" font-family="monospace" font-size="11">V_G pulse &lt; −V_C → V_TH rises</text>
+    </svg></div>
+  </div>
+</section>
+
+<section class="mat">
+  <div class="body reveal">
+    <div class="sec-head"><h2>Why hafnium oxide changed everything</h2></div>
+    <p style="margin-top:14px">Ferroelectrics used to mean exotic ceramics — lead-based PZT or layered SBT — that a silicon fab would never touch. Then in <b>2011, ferroelectricity was discovered in Si-doped HfO₂</b>: the very oxide already sitting in every logic fab as the high-k gate dielectric.</p>
+    <p>Hf₁₋ₓZrₓO₂ (HZO), annealed under confinement, locks into a <b>non-centrosymmetric orthorhombic phase (Pca2₁)</b> whose unit cell carries a switchable dipole. Remanent polarization reaches 10–40 µC/cm² at under 10 nm thickness — thin enough to scale with logic, robust enough to remember.</p>
+    <p>That is what makes the FeFET practical: a non-volatile memory built entirely from materials and thermal budgets the CMOS line already owns, added in a few extra steps to a plain transistor.</p>
+    <div class="cite">S. J. Böscke et al., “Ferroelectricity in hafnium oxide thin films,” Appl. Phys. Lett. 99, 102903 (2011)</div>
+  </div>
+  <div class="stats">
+    <div class="stat reveal"><b>2011</b><div><strong>The turning point</strong>ferroelectricity found in doped HfO₂</div></div>
+    <div class="stat reveal"><b>10–40</b><div><strong>µC/cm² remanent polarization P_r</strong>sets the size of the memory window</div></div>
+    <div class="stat reveal"><b>&lt; 10 nm</b><div><strong>Ferroelectric thickness</strong>scales with advanced logic nodes</div></div>
+    <div class="stat reveal"><b>~ns</b><div><strong>Intrinsic switching speed</strong>dipole switching, not charge pumping</div></div>
+    <div class="stat reveal"><b>10⁵–10⁹</b><div><strong>Endurance cycles</strong>limited by wake-up & fatigue effects</div></div>
+    <div class="stat reveal"><b>1 T</b><div><strong>Capacitor-less cell</strong>one transistor stores the bit — vs 1T-1C for DRAM</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head reveal"><h2>FeFET vs. the field</h2><p>Where one-transistor ferroelectric memory sits among the established technologies.</p></div>
+  <div class="panel reveal" style="margin-top:22px;overflow-x:auto">
+    <table>
+      <thead><tr><th></th><th class="hl">FeFET</th><th>Floating-gate Flash</th><th>DRAM</th></tr></thead>
+      <tbody>
+        <tr><td>Bit stored as</td><td class="hl">Dipole orientation (polarization)</td><td>Trapped charge on a floating gate</td><td>Charge on a capacitor</td></tr>
+        <tr><td>Cell</td><td class="hl">1 transistor</td><td>1 transistor (+ selector)</td><td>1 transistor + 1 capacitor</td></tr>
+        <tr><td>Write mechanism</td><td class="hl">Lattice polarization switching</td><td>Fowler–Nordheim tunneling</td><td>Charge sharing</td></tr>
+        <tr><td>Write speed</td><td class="hl">~ns</td><td>µs – ms</td><td>~ns</td></tr>
+        <tr><td>Write voltage</td><td class="hl">~2–4 V</td><td>10–20 V (on-chip pump)</td><td>~1 V</td></tr>
+        <tr><td>Endurance</td><td class="hl">10⁵ – 10⁹</td><td>10³ – 10⁵</td><td>&gt; 10¹⁵</td></tr>
+        <tr><td>Non-volatile</td><td class="hl">yes</td><td>yes</td><td>no — refresh every ms</td></tr>
+        <tr><td>Scaling bottleneck</td><td class="hl">FE film quality &lt; 10 nm</td><td>tunnel oxide reliability</td><td>capacitor aspect ratio</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <b>FeFET Lab</b> — an interactive explainer. Device drawing not to scale.
+    <p class="model">MODEL NOTES · Domains are independent Preisach-like switches with Gaussian-distributed coercive voltages (mean ±V_C). Threshold shift V_TH = V_TH0 − (P/P_r)·P_r·t_FE/(ε₀·ε_FE). Drain current uses a constant-swing sigmoid, S ≈ 85 mV/dec. Real FeFETs add depolarization fields, series-capacitance division, wake-up/fatigue cycling, and read-disturb effects — deliberately omitted here for clarity.</p>
+  </div>
+</footer>
+
+<noscript><p style="color:#ff6b7a;font-family:monospace;padding:20px">This applet needs JavaScript enabled.</p></noscript>
+
+<script>
+"use strict";
+/* ---------- error reporting ---------- */
+window.addEventListener("error",function(e){
+  var f=document.getElementById("fatal");
+  if(f){f.style.display="block";f.textContent="ERROR: "+e.message+" (line "+e.lineno+") — please report this text.";}
+});
+
+const $=id=>document.getElementById(id);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const EPS0=8.854e-12;
+
+const params={Pr:20,tFE:10,epsFE:28,Vc:1.4,Vth0:0.35,S:0.085,Ion:5e-4,Vread:0,Vp:3.2};
+const NCOL=16,NROW=3,NDOM=NCOL*NROW;
+function gauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();
+  return clamp(Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v),-2.2,2.2);}
+const dom=[];
+for(let i=0;i<NDOM;i++) dom.push({g:gauss(),s:1,t:-9999});
+const vUp=d=>params.Vc+d.g*0.32, vDn=d=>-params.Vc+d.g*0.32;
+const Pavg=()=>dom.reduce((a,d)=>a+d.s,0)/NDOM;
+const dVhalf=()=>params.Pr*1e-2*params.tFE*1e-9/(EPS0*params.epsFE);
+const Vth=()=>params.Vth0-Pavg()*dVhalf();
+const IdAt=v=>params.Ion/(1+Math.pow(10,(Vth()-v)/params.S));
+function fmtA(x){if(x>=1e-3)return (x*1e3).toFixed(2)+" mA";if(x>=1e-6)return (x*1e6).toFixed(x>=1e-4?0:1)+" µA";
+  if(x>=1e-9)return (x*1e9).toFixed(1)+" nA";return (x*1e12).toFixed(1)+" pA";}
+
+const sim={Vg:0,mode:"idle",seq:[],glow:0,kFlip:4,inv:0,drainFlash:0,onDone:null,
+  pvT:[],ivU:[],ivD:[],wave:[]};
+const electrons=[];for(let i=0;i<24;i++)electrons.push({x:314+Math.random()*330,y:204+Math.random()*15,f:Math.random()});
+
+let seed=7;const rnd=()=>{seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff;};
+const grains=[];for(let i=0;i<13;i++){const x0=300+i*28+rnd()*14,p=[];for(let y=116;y<=190;y+=10)p.push([x0+(rnd()-.5)*10,y]);grains.push(p);}
+const sdDots=[];for(let i=0;i<11;i++)sdDots.push({x:202+rnd()*98,y:205+rnd()*105},{x:660+rnd()*98,y:205+rnd()*105});
+
+/* ---------- canvases (with robust sizing) ---------- */
+const CV={dev:{ar:500/960},pv:{ar:9.4/16},iv:{ar:9.4/16},wv:{ar:84/960},hd:{ar:1}};
+const CVID={dev:"devCv",pv:"pvCv",iv:"ivCv",wv:"wvCv",hd:"hdCv"};
+function fit(o,c){
+  const d=Math.min(2,window.devicePixelRatio||1);
+  let w=c.clientWidth,h=c.clientHeight;
+  if(w===0)return false;
+  if(h<40)h=Math.round(w*o.ar);              /* fallback if aspect-ratio unsupported */
+  c.style.height=h+"px";
+  c.width=Math.round(w*d);c.height=Math.round(h*d);
+  o.x=c.getContext("2d");o.x.setTransform(d,0,0,d,0,0);o.w=w;o.h=h;
+  return true;
+}
+function fitAll(){for(const k in CVID)fit(CV[k],$(CVID[k]));}
+function ensureFit(){for(const k in CVID){if(!CV[k].x)fit(CV[k],$(CVID[k]));}}
+addEventListener("resize",()=>{for(const k in CVID){CV[k].x=null;}fitAll();});
+function rr(x,y,w,h,r){x.beginPath();x.moveTo(r,y);x.arcTo(w,y,w,h,r);x.arcTo(w,h,0,h,r);x.arcTo(0,h,0,y,r);x.arcTo(0,y,w,y,r);x.closePath();}
+
+/* ---------- sequencing ---------- */
+function startSeq(items,mode){items.forEach((it,i)=>{it.t=0;if(i===0)it.from=sim.Vg;});
+  sim.seq=items;sim.mode=mode;sim.kFlip=4;}
+function tickSeq(dt){
+  const it=sim.seq[0];
+  if(!it){sim.mode="idle";sim.glow=0;return;}
+  it.t+=dt;
+  if(it.hold){sim.glow=it.glow||0;sim.kFlip=it.flip||4;
+    if(it.t>=it.hold)advance(it);return;}
+  const dur=it.ms||300,k=(it.to-it.from)/dur;
+  sim.Vg=it.from+k*Math.min(it.t,dur);
+  if(it.rec)record(it.rec);
+  sim.glow=it.glow||0;sim.kFlip=it.flip||4;
+  if(it.t>=dur)advance(it);
+}
+function advance(it){sim.seq.shift();const nx=sim.seq[0];
+  if(nx&&!nx.hold)nx.from=sim.Vg;
+  if(!sim.seq[0]){sim.mode="idle";sim.glow=0;if(sim.onDone){const f=sim.onDone;sim.onDone=null;setTimeout(f,60);}}}
+function record(tag){const now=performance.now(),v=sim.Vg,p=Pavg(),i=IdAt(v);
+  sim.pvT.push({v,p,t:now});if(sim.pvT.length>2800)sim.pvT.shift();
+  if(tag==="pu")sim.ivU.push({v,i});else if(tag==="pd")sim.ivD.push({v,i});}
+function clearTraces(){sim.pvT.length=0;sim.ivU.length=0;sim.ivD.length=0;}
+
+function stepDomains(k){
+  const V=sim.Vg,cand=[];
+  for(const d of dom){
+    if(d.s<0&&V>vUp(d))cand.push([V-vUp(d),d,1]);
+    else if(d.s>0&&V<vDn(d))cand.push([vDn(d)-V,d,-1]);
+  }
+  cand.sort((a,b)=>b[0]-a[0]);
+  const now=performance.now();
+  for(let i=0;i<Math.min(k,cand.length);i++){const d=cand[i][1];d.s=cand[i][2];d.t=now;}
+}
+
+/* ---------- actions ---------- */
+$("btnProg").onclick=()=>{if(sim.mode!=="idle")return;
+  startSeq([{to:params.Vp,ms:120,glow:1,flip:6},{hold:430,glow:1,flip:8},{to:params.Vread,ms:220,flip:5}],"pulse");};
+$("btnErase").onclick=()=>{if(sim.mode!=="idle")return;
+  startSeq([{to:-params.Vp,ms:120,glow:-1,flip:6},{hold:430,glow:-1,flip:8},{to:params.Vread,ms:220,flip:5}],"pulse");};
+$("btnSweep").onclick=()=>{if(sim.mode!=="idle")return;clearTraces();
+  startSeq([{to:-3.6,ms:900,rec:"p"},{to:3.6,ms:3600,rec:"pu"},{to:-3.6,ms:3600,rec:"pd"},{to:params.Vread,ms:900}],"sweep");};
+$("btnRead").onclick=()=>{if(sim.mode!=="idle")return;
+  sim.onDone=showVerdict;
+  startSeq([{to:params.Vread,ms:320,flip:4},{hold:160}],"read");};
+function showVerdict(){
+  const v=params.Vread,i=IdAt(v),on=i>1e-6,el=$("verdict");
+  el.className=on?"show":"show z";
+  el.innerHTML=(on?`I_D = <b style="color:var(--mint)">${fmtA(i)}</b> at V_G = ${v.toFixed(2)} V<br>channel conducting → <b style="color:var(--mint)">stored 1</b> · read is non-destructive`
+                  :`I_D ≈ <b style="color:var(--coral)">${fmtA(i)}</b> at V_G = ${v.toFixed(2)} V<br>channel off → <b style="color:var(--coral)">stored 0</b>`);
+  clearTimeout(el._t);el._t=setTimeout(()=>el.className="",3200);
+}
+
+const vgR=$("vgR");
+vgR.addEventListener("input",()=>{if(sim.mode!=="idle")return;sim.Vg=parseFloat(vgR.value);});
+function bindSlider(id,valId,obj,key,fmt){const r=$(id);r.addEventListener("input",()=>{obj[key]=parseFloat(r.value);$(valId).textContent=fmt(obj[key]);clearTraces();});}
+bindSlider("vpR","vpVal",params,"Vp",v=>v.toFixed(2)+" V");
+bindSlider("vrR","vrVal",params,"Vread",v=>v.toFixed(2)+" V");
+bindSlider("prR","prVal",params,"Pr",v=>v.toFixed(0)+" µC/cm²");
+bindSlider("tR","tVal",params,"tFE",v=>v.toFixed(1)+" nm");
+bindSlider("vcR","vcVal",params,"Vc",v=>v.toFixed(2)+" V");
+
+addEventListener("keydown",e=>{
+  if(e.target.tagName==="INPUT")return;
+  const k=e.key.toLowerCase();
+  if(k==="arrowleft"||k==="arrowright"){if(sim.mode!=="idle")return;
+    sim.Vg=clamp(sim.Vg+(k==="arrowright"?0.1:-0.1),-3.5,3.5);e.preventDefault();}
+  if(k==="p")$("btnProg").click();if(k==="e")$("btnErase").click();
+  if(k==="r")$("btnRead").click();if(k==="s")$("btnSweep").click();
+});
+
+/* ---------- device drawing ---------- */
+function drawDevice(now){
+  const x=CV.dev.x;if(!x)return;const sx=CV.dev.w/960,sy=CV.dev.h/500;
+  x.save();x.scale(sx,sy);x.clearRect(0,0,960,500);
+  const pa=Pavg(),vth=Vth(),inv=sim.inv;
+  let g=x.createLinearGradient(0,197,0,440);g.addColorStop(0,"#1a2742");g.addColorStop(1,"#101a2c");
+  x.fillStyle=g;x.fillRect(180,197,600,243);x.strokeStyle="#2a3f5c";x.strokeRect(180,197,600,243);
+  x.fillStyle="#5c728a";x.font='11px "IBM Plex Mono",monospace';x.fillText("p-Si body",192,428);
+
+  const eff=vth-sim.Vg,d=eff>0?Math.min(64,8+eff*22):0;
+  if(d>2){x.fillStyle="rgba(40,58,90,.35)";x.fillRect(306,197,348,d);
+    x.fillStyle="#6f86a6";x.font='12px "IBM Plex Mono",monospace';
+    for(let yy=211;yy<197+d;yy+=22)for(let xx=316+(((yy/22)|0)%2)*13;xx<648;xx+=28)x.fillText("−",xx,yy);}
+
+  x.fillStyle="#1d3a4a";x.fillRect(196,197,110,121);x.fillRect(654,197,110,121);
+  x.strokeStyle="#2c5568";x.strokeRect(196,197,110,121);x.strokeRect(654,197,110,121);
+  x.fillStyle="rgba(111,227,240,.55)";
+  for(const p of sdDots){x.beginPath();x.arc(p.x,p.y,2.4,0,7);x.fill();}
+  x.fillStyle="#8ea6bf";x.fillText("n⁺",238,262);x.fillText("n⁺",696,262);
+
+  if(inv>0.03){g=x.createLinearGradient(0,197,0,222);
+    g.addColorStop(0,"rgba(79,216,232,"+(0.5*inv)+")");g.addColorStop(1,"rgba(79,216,232,0)");
+    x.fillStyle=g;x.fillRect(306,197,348,25);}
+  const n=Math.round(inv*24);
+  for(let i=0;i<n;i++){const e=electrons[i];
+    x.beginPath();x.arc(e.x,e.y+Math.sin(now/300+i)*1.5,3,0,7);
+    x.fillStyle="#7ee9f5";x.shadowColor="#4fd8e8";x.shadowBlur=8;x.fill();x.shadowBlur=0;}
+  if(sim.drainFlash>0.05){x.beginPath();x.arc(650,210,10*sim.drainFlash,0,7);
+    x.fillStyle="rgba(94,230,168,"+(sim.drainFlash*.5)+")";x.fill();}
+
+  x.fillStyle="#33465f";x.fillRect(300,190,360,7);
+
+  const cw=360/NCOL,ch=74/NROW;
+  for(let r=0;r<NROW;r++)for(let c=0;c<NCOL;c++){
+    const dm=dom[r*NCOL+c],dx=300+c*cw,dy=116+r*ch;
+    x.fillStyle=dm.s>0?"#123c44":"#3a2c12";
+    rr(x,dx+1.2,dy+1.2,cw-2.4,ch-2.4,3);x.fill();
+    const t=(now-dm.t)/240,syA=t<1?-Math.cos(Math.PI*t):1;
+    const dir=dm.s*syA,len=9*Math.abs(syA);
+    if(len>0.6){const cxp=dx+cw/2,cyp=dy+ch/2,col=dm.s>0?"#53e0d2":"#ffb454";
+      x.strokeStyle=col;x.fillStyle=col;x.lineWidth=2;
+      x.beginPath();x.moveTo(cxp,cyp-len*dir);x.lineTo(cxp,cyp+len*dir*0.45);x.stroke();
+      x.beginPath();x.moveTo(cxp-4.5,cyp+len*dir*0.45);x.lineTo(cxp+4.5,cyp+len*dir*0.45);x.lineTo(cxp,cyp+len*dir);x.closePath();x.fill();
+      if(t<1){x.beginPath();x.arc(cxp,cyp,11,0,7);x.strokeStyle="rgba(255,255,255,"+((1-t)*.5)+")";x.lineWidth=1.2;x.stroke();}}
+  }
+  x.strokeStyle="rgba(255,255,255,.07)";x.lineWidth=1;
+  for(const p of grains){x.beginPath();x.moveTo(p[0][0],p[0][1]);for(const q of p)x.lineTo(q[0],q[1]);x.stroke();}
+  x.strokeStyle="#2c4763";x.strokeRect(300,116,360,74);
+
+  x.font='13px "IBM Plex Mono",monospace';
+  const nb=Math.round(11*Math.abs(pa));
+  for(let i=0;i<nb;i++){const bx=316+i*(328/Math.max(nb-1,1));
+    x.fillStyle=pa>0?"#ffb454":"#7ee9f5";x.fillText(pa>0?"+":"−",bx,188);}
+
+  g=x.createLinearGradient(0,84,0,116);g.addColorStop(0,"#8a7448");g.addColorStop(1,"#5d4d30");
+  x.fillStyle=g;x.fillRect(300,84,360,32);x.strokeStyle="#a08a56";x.strokeRect(300,84,360,32);
+
+  if(Math.abs(sim.Vg)>0.12){const dn=sim.Vg>0,a=0.1+0.28*Math.min(1,Math.abs(sim.Vg)/3.5);
+    x.strokeStyle="rgba(232,240,248,"+a+")";x.lineWidth=1.5;
+    for(let fx=340;fx<=620;fx+=70)for(let fy=96;fy<=176;fy+=26){
+      const yy=dn?fy:fy+14,s=dn?6:-6;
+      x.beginPath();x.moveTo(fx-5,yy-s);x.lineTo(fx,yy);x.lineTo(fx+5,yy-s);x.stroke();}}
+
+  if(sim.glow!==0){x.fillStyle=sim.glow>0?"rgba(255,180,84,.16)":"rgba(255,107,122,.16)";
+    x.fillRect(296,80,368,120);}
+
+  const pm=135,plen=Math.abs(pa)*30;
+  x.strokeStyle="#5c728a";x.lineWidth=1;x.beginPath();x.moveTo(272,105);x.lineTo(272,165);x.stroke();
+  if(plen>1){const col=pa>0?"#ffb454":"#53e0d2",dir2=pa>0?1:-1;
+    x.strokeStyle=col;x.lineWidth=2.5;x.beginPath();x.moveTo(272,pm-plen*dir2);x.lineTo(272,pm+plen*dir2);x.stroke();
+    x.fillStyle=col;x.beginPath();
+    x.moveTo(266,pm+plen*dir2);x.lineTo(278,pm+plen*dir2);x.lineTo(272,pm+(plen+7)*dir2);x.closePath();x.fill();}
+  x.fillStyle="#8ea6bf";x.font='11px "IBM Plex Mono",monospace';x.fillText("P",266,178);
+
+  x.fillStyle="#46566e";x.fillRect(206,158,90,39);x.fillRect(664,158,90,39);
+  x.strokeStyle="#5f7492";x.lineWidth=2;
+  x.beginPath();x.moveTo(251,158);x.lineTo(251,118);x.lineTo(58,118);x.stroke();
+  x.beginPath();x.moveTo(709,158);x.lineTo(709,118);x.lineTo(902,118);x.stroke();
+  x.beginPath();x.moveTo(480,84);x.lineTo(480,34);x.stroke();
+  x.fillStyle="#8ea6bf";
+  [[58,118],[902,118],[480,34]].forEach(p=>{x.beginPath();x.arc(p[0],p[1],4.5,0,7);x.fill();});
+  x.font='12px "IBM Plex Mono",monospace';x.fillText("S",44,108);x.fillText("D",894,108);x.fillText("G",492,30);
+  x.strokeStyle="#5c728a";x.lineWidth=1.5;
+  x.beginPath();x.moveTo(58,122);x.lineTo(58,132);x.moveTo(48,132);x.lineTo(68,132);
+  x.moveTo(52,137);x.lineTo(64,137);x.moveTo(55,142);x.lineTo(61,142);x.stroke();
+  x.beginPath();x.arc(810,118,15,0,7);x.strokeStyle="#5ee6a8";x.lineWidth=1.5;x.stroke();
+  x.fillStyle="#5ee6a8";x.font='12px "IBM Plex Mono",monospace';x.fillText("A",806,122);
+  x.font='11px "IBM Plex Mono",monospace';x.fillText(fmtA(IdAt(sim.Vg)),770,92);
+  x.fillStyle="#5c728a";x.fillText("V_DS = 0.1 V",830,148);
+
+  x.fillStyle="#8ea6bf";x.font='11px "IBM Plex Mono",monospace';
+  x.fillText("TiN gate",672,102);
+  x.fillStyle="#ffb454";x.fillText("Hf0.5Zr0.5O2 (FE)",672,150);
+  x.fillStyle="#8ea6bf";x.fillText("SiO2 IL",672,197);
+  x.fillStyle="#ffd47e";x.font='13px "IBM Plex Mono",monospace';
+  x.textAlign="center";x.fillText("V_G = "+(sim.Vg>=0?"+":"")+sim.Vg.toFixed(2)+" V",480,24);x.textAlign="left";
+  x.restore();
+}
+
+/* ---------- scopes ---------- */
+function drawPV(now){
+  const x=CV.pv.x;if(!x)return;const W=CV.pv.w,H=CV.pv.h;
+  const l=42,r=12,t=12,b=28,mx=v=>l+(v+4)/8*(W-l-r),my=p=>t+(1-(p+1.15)/2.3)*(H-t-b);
+  x.clearRect(0,0,W,H);
+  x.strokeStyle="rgba(34,52,75,.8)";x.lineWidth=1;
+  for(let v=-4;v<=4;v++){x.beginPath();x.moveTo(mx(v),t);x.lineTo(mx(v),H-b);x.stroke();}
+  for(const p of[-1,-.5,0,.5,1]){x.beginPath();x.moveTo(l,my(p));x.lineTo(W-r,my(p));x.stroke();}
+  x.fillStyle="#5c728a";x.font='10px "IBM Plex Mono",monospace';
+  for(let v=-4;v<=4;v+=2)x.fillText(v,mx(v)-6,H-9);
+  x.fillText("1",l-16,my(1)+3);x.fillText("0",l-16,my(0)+3);x.fillText("-1",l-22,my(-1)+3);
+  x.fillText("V_G (V)",W-66,H-9);x.fillText("P/Pr",l-34,t+8);
+  x.strokeStyle="rgba(255,180,84,.3)";x.setLineDash([3,4]);
+  [params.Vc,-params.Vc].forEach(v=>{x.beginPath();x.moveTo(mx(v),t);x.lineTo(mx(v),H-b);x.stroke();});
+  x.setLineDash([]);
+  x.lineWidth=1.4;x.strokeStyle="rgba(79,216,232,.28)";x.beginPath();
+  for(let V=-4;V<=4;V+=.05){let f=0;for(const dd of dom)if(vUp(dd)<=V)f++;
+    const p=2*f/NDOM-1;V<=-3.95?x.moveTo(mx(V),my(p)):x.lineTo(mx(V),my(p));}
+  x.stroke();
+  x.strokeStyle="rgba(255,180,84,.28)";x.beginPath();
+  for(let V=4;V>=-4;V-=.05){let f=0;for(const dd of dom)if(vDn(dd)<V)f++;
+    const p=2*f/NDOM-1;V>=3.95?x.moveTo(mx(V),my(p)):x.lineTo(mx(V),my(p));}
+  x.stroke();
+  for(let i=1;i<sim.pvT.length;i++){const a=sim.pvT[i],b2=sim.pvT[i-1];
+    const al=clamp(1-(now-a.t)/7000,0,1);if(al<=0)continue;
+    x.strokeStyle="rgba(94,230,168,"+(al*.9)+")";x.lineWidth=2;
+    x.beginPath();x.moveTo(mx(b2.v),my(b2.p));x.lineTo(mx(a.v),my(a.p));x.stroke();}
+  const hx=mx(sim.Vg),hy=my(Pavg());
+  x.beginPath();x.arc(hx,hy,5,0,7);x.fillStyle="#5ee6a8";x.shadowColor="#5ee6a8";x.shadowBlur=12;x.fill();x.shadowBlur=0;
+}
+function drawIV(now){
+  const x=CV.iv.x;if(!x)return;const W=CV.iv.w,H=CV.iv.h;
+  const l=48,r=12,t=12,b=28,L0=-9,L1=-3;
+  const mx=v=>l+(v+4)/8*(W-l-r),mi=i=>t+(1-(clamp(Math.log10(Math.max(i,1e-12)),L0,L1)-L0)/(L1-L0))*(H-t-b);
+  x.clearRect(0,0,W,H);
+  x.strokeStyle="rgba(34,52,75,.8)";x.lineWidth=1;
+  for(let v=-4;v<=4;v++){x.beginPath();x.moveTo(mx(v),t);x.lineTo(mx(v),H-b);x.stroke();}
+  x.fillStyle="#5c728a";x.font='10px "IBM Plex Mono",monospace';
+  for(let e=L0;e<=L1;e++){x.beginPath();x.moveTo(l,mi(Math.pow(10,e)));x.lineTo(W-r,mi(Math.pow(10,e)));x.stroke();
+    x.fillText("1e"+e,l-34,mi(Math.pow(10,e))+3);}
+  for(let v=-4;v<=4;v+=2)x.fillText(v,mx(v)-5,H-9);
+  x.fillText("V_G (V)",W-66,H-9);x.fillText("log I_D",l-40,t+8);
+  const dv=dVhalf();
+  const curve=(vt,col)=>{x.strokeStyle=col;x.lineWidth=1.4;x.beginPath();
+    for(let V=-3.8;V<=3.8;V+=.06){const i=params.Ion/(1+Math.pow(10,(vt-V)/params.S));
+      V<=-3.74?x.moveTo(mx(V),mi(i)):x.lineTo(mx(V),mi(i));}x.stroke();};
+  curve(params.Vth0+dv,"rgba(79,216,232,.3)");
+  curve(params.Vth0-dv,"rgba(255,180,84,.3)");
+  const tl=(arr,col)=>{if(arr.length<2)return;x.strokeStyle=col;x.lineWidth=2;x.beginPath();
+    arr.forEach((p,i)=>i?x.lineTo(mx(p.v),mi(p.i)):x.moveTo(mx(p.v),mi(p.i)));x.stroke();};
+  tl(sim.ivU,"#4fd8e8");tl(sim.ivD,"#ffb454");
+  const yb=mi(3e-8),xa=mx(params.Vth0-dv),xb=mx(params.Vth0+dv);
+  x.strokeStyle="#ffd47e";x.lineWidth=1.5;
+  x.beginPath();x.moveTo(xa,yb);x.lineTo(xb,yb);x.moveTo(xa,yb-5);x.lineTo(xa,yb+5);x.moveTo(xb,yb-5);x.lineTo(xb,yb+5);x.stroke();
+  x.fillStyle="#ffd47e";x.fillText("dV_TH = "+(2*dv).toFixed(2)+" V",(xa+xb)/2-38,yb-8);
+  x.strokeStyle="rgba(94,230,168,.5)";x.setLineDash([4,4]);
+  x.beginPath();x.moveTo(mx(params.Vread),t);x.lineTo(mx(params.Vread),H-b);x.stroke();x.setLineDash([]);
+  x.fillStyle="#5ee6a8";x.fillText("V_read",mx(params.Vread)-16,t+10);
+  x.beginPath();x.arc(mx(sim.Vg),mi(IdAt(sim.Vg)),5,0,7);
+  x.fillStyle="#e8f0f8";x.shadowColor="#5ee6a8";x.shadowBlur=10;x.fill();x.shadowBlur=0;
+}
+function drawWave(){
+  const x=CV.wv.x;if(!x)return;const W=CV.wv.w,H=CV.wv.h,t=8,b=8;
+  const my=v=>t+(1-(v+4.4)/8.8)*(H-t-b);
+  x.clearRect(0,0,W,H);
+  x.strokeStyle="rgba(34,52,75,.9)";x.setLineDash([3,4]);
+  x.beginPath();x.moveTo(0,my(0));x.lineTo(W,my(0));x.stroke();x.setLineDash([]);
+  x.fillStyle="#5c728a";x.font='10px "IBM Plex Mono",monospace';x.fillText("0 V",6,my(0)-4);
+  const w=sim.wave,n=w.length;if(n<2)return;
+  for(let i=1;i<n;i++){const a=w[i],px0=(i-1)/(540-1)*W,px1=i/(540-1)*W;
+    x.strokeStyle=a.g>0?"#ffb454":a.g<0?"#ff6b7a":"#5c728a";x.lineWidth=1.6;
+    x.beginPath();x.moveTo(px0,my(w[i-1].v));x.lineTo(px1,my(a.v));x.stroke();}
+  x.fillStyle="#8ea6bf";x.fillText("V_G(t) — last ~9 s",W/2-52,14);
+}
+const hd={th:0,P:0,pts:[]};
+function drawHD(){
+  const x=CV.hd.x;if(!x)return;const W=CV.hd.w,H=CV.hd.h;
+  hd.th+=0.022;const V=3.3*Math.sin(hd.th),dV=Math.cos(hd.th);
+  const s=dV>=0?1:-1,targ=clamp(Math.tanh(2.4*(V-1.05*s)),-1,1);
+  hd.P+=(targ-hd.P)*0.16;hd.pts.push({v:V,p:hd.P});if(hd.pts.length>340)hd.pts.shift();
+  const mx=v=>12+(v+3.6)/7.2*(W-24),my=p=>12+(1-(p+1.15)/2.3)*(H-30);
+  x.clearRect(0,0,W,H);
+  x.strokeStyle="rgba(34,52,75,.9)";
+  x.beginPath();x.moveTo(mx(-3.6),my(0));x.lineTo(mx(3.6),my(0));x.moveTo(mx(0),my(-1.1));x.lineTo(mx(0),my(1.1));x.stroke();
+  for(let i=1;i<hd.pts.length;i++){const al=i/hd.pts.length;
+    x.strokeStyle="rgba(255,180,84,"+(al*.85)+")";x.lineWidth=1+al*1.4;
+    x.beginPath();x.moveTo(mx(hd.pts[i-1].v),my(hd.pts[i-1].p));x.lineTo(mx(hd.pts[i].v),my(hd.pts[i].p));x.stroke();}
+  const hp=hd.pts[hd.pts.length-1];
+  x.beginPath();x.arc(mx(hp.v),my(hp.p),3.5,0,7);x.fillStyle="#ffd47e";x.shadowColor="#ffb454";x.shadowBlur=10;x.fill();x.shadowBlur=0;
+  x.fillStyle="#5c728a";x.font='9px "IBM Plex Mono",monospace';x.fillText("P",mx(0)+5,my(1.05));x.fillText("E",mx(3.4),my(0)-5);
+}
+
+/* ---------- readouts ---------- */
+const MODES={idle:"● IDLE",sweep:"◉ SWEEPING",pulse:"⚡ PULSE",read:"◎ READ"};
+function readouts(){
+  const pa=Pavg(),i=IdAt(sim.Vg);
+  $("vgVal").textContent=(sim.Vg>=0?"+":"")+sim.Vg.toFixed(2)+" V";
+  if(sim.mode!=="idle"){vgR.value=sim.Vg.toFixed(2);}
+  vgR.disabled=sim.mode!=="idle";
+  $("vthVal").textContent=Vth().toFixed(2)+" V";
+  $("pVal").textContent=(pa*params.Pr).toFixed(1)+" µC/cm²";
+  $("idVal").textContent=fmtA(i);
+  $("winVal").textContent=(2*dVhalf()).toFixed(2)+" V";
+  const b=$("stateBdg");
+  if(pa>0.25){b.textContent="1 · ON";b.className="on";}
+  else if(pa<-0.25){b.textContent="0 · OFF";b.className="off";}
+  else{b.textContent="PARTIAL";b.className="mid";}
+  const mc=$("modeChip");mc.textContent=MODES[sim.mode]||"● IDLE";
+  mc.className="mode-chip"+(sim.mode!=="idle"?" hot":"");
+}
+
+/* ---------- main loop ---------- */
+let last=performance.now();
+function loop(now){
+  try{
+    const dt=Math.min(40,now-last);last=now;
+    ensureFit();
+    if(sim.mode!=="idle")tickSeq(dt);
+    stepDomains(sim.kFlip);
+    sim.inv=1/(1+Math.pow(10,(Vth()-sim.Vg)/0.09));
+    const n=Math.round(sim.inv*24),
+          spd=sim.inv>0.02?0.3+3.0*Math.min(1,IdAt(sim.Vg)/params.Ion):0;
+    for(let i=0;i<n;i++){const e=electrons[i];e.x+=spd*(0.7+0.6*e.f);
+      if(e.x>646){e.x=314;sim.drainFlash=1;}}
+    sim.drainFlash*=0.92;
+    sim.wave.push({v:sim.Vg,g:sim.mode==="pulse"?sim.glow:0});
+    if(sim.wave.length>540)sim.wave.shift();
+    drawDevice(now);drawPV(now);drawIV(now);drawWave();drawHD();readouts();
+  }catch(err){
+    const f=$("fatal");
+    if(f){f.style.display="block";f.textContent="RUNTIME ERROR: "+err.message;}
+  }
+  requestAnimationFrame(loop);
+}
+
+/* ---------- init ---------- */
+const tkItems=["Hf0.5Zr0.5O2 · orthorhombic Pca21","ferroelectricity in HfO2 — discovered 2011","Pr = 10–40 µC/cm²","1-transistor capacitor-less cell","sub-ns dipole switching","CMOS-back-end compatible","non-volatile · no refresh","synapses for in-memory computing"];
+$("tk").innerHTML=(tkItems.map(s=>"<span>"+s+"</span><i>◆</i>").join("")).repeat(2);
+if("IntersectionObserver" in window){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{threshold:.15});
+  document.querySelectorAll(".reveal").forEach((el,i)=>{el.style.transitionDelay=(i%5)*70+"ms";io.observe(el);});
+}else{
+  document.querySelectorAll(".reveal").forEach(el=>el.classList.add("in"));
+}
+fitAll();
+$("bootmsg").textContent="✔ simulation running — drag V_G or press SWEEP";
+$("bootmsg").style.color="#5ee6a8";
+requestAnimationFrame(t=>{last=t;loop(t);});
+</script>
+</body>
+</html>
