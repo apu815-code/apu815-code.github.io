@@ -34,11 +34,16 @@ The core of my group's work is a **first-principles-to-device simulation chain**
 
 Current topics include:
 
-- **Topological-insulator field-effect transistors (TIFETs):** gate-field-driven topological phase transitions in 1T′ transition-metal dichalcogenides, Bi₄X₄ (X = Br, I) and Bi₂Se₃ nanoribbons
-- **2D-material FETs:** borophene, black phosphorus (including gate-all-around nanosheets), graphene nanoribbons and graphynes
-- **Thermoelectrics:** strain- and pressure-engineered Bi₂Te₃
-- **Ferroelectric FETs (FeFETs):** device-aware neuromorphic hardware
-- **Coherent electron–photon interaction** in graphene nanostructures. This was my PhD work at Georgia Tech on quantum-interference photodetectors.
+- **Topological-insulator FETs:** gate-field-driven quantum spin Hall to trivial transitions in 1T′-MoS₂, 1T′-WTe₂, stanene, Bi₄X₄ (X = Br, I) and Bi₂Se₃ nanoribbons
+- **2D-material transistors and contacts:** borophene, black phosphorus, graphene nanoribbons, graphynes, bismuthene and MoSe₂ nanoribbons, and Fermi-level pinning at metal/2D contacts such as NbₓW₁₋ₓSe₂/WSe₂
+- **Materials research and thermoelectrics:** first-principles screening of 2D and topological materials, and strain- and pressure-engineered Bi₂Te₃
+- **TCAD simulations and CFET:** Sentaurus/Silvaco device simulation, gate-all-around and complementary FET structures
+- **FeFET and SOT memory, predictive coding:** device-aware neuromorphic and in-memory hardware
+- **Photonic biosensors:** PCF-SPR sensors with molecularly imprinted polymer layers
+- **Coherent electron–photon interaction** in graphene nanostructures (my PhD work at Georgia Tech on quantum-interference photodetectors)
+- **Power systems:** wireless EV charging, automatic voltage regulators, solar PV integration, and grid simulation with machine-learning prediction of power-plant derating
+
+<p><a class="btn btn-sm z-depth-0" role="button" href="{{ '/research/' | relative_url }}">Research</a> <a class="btn btn-sm z-depth-0" role="button" href="{{ '/publications/' | relative_url }}">All publications</a></p>
 
 Outside research, I provide **engineering consultancy** through the Bureau of Research, Testing and Consultation (BRTC), BUET. This includes forensic investigation of electrical fires, product testing and reliability assessment, technical committee work for government agencies, and recruitment examinations for public-sector utilities. See [consultancy](/consultancy/) for details.
 
