@@ -43,7 +43,22 @@ Current topics include:
 - **Coherent electron–photon interaction** in graphene nanostructures (my PhD work at Georgia Tech on quantum-interference photodetectors)
 - **Power systems:** wireless EV charging, automatic voltage regulators, solar PV integration, and grid simulation with machine-learning prediction of power-plant derating
 
-<p><a class="btn btn-sm z-depth-0" role="button" href="{{ '/research/' | relative_url }}">Research</a> <a class="btn btn-sm z-depth-0" role="button" href="{{ '/publications/' | relative_url }}">All publications</a></p>
+<p><a class="btn btn-sm z-depth-0" role="button" href="{{ '/research/' | relative_url }}">Research</a></p>
+
+<script id="pubfix">
+  /* Selected publications heading: plain text (not a link) with a separate, clickable "All publications" button beside it */
+  document.addEventListener('DOMContentLoaded', function () {
+    var h = Array.prototype.slice.call(document.querySelectorAll('h2')).filter(function (e) { return /selected publications/i.test(e.textContent); })[0];
+    if (!h) return;
+    var a = h.querySelector('a');
+    var url = a ? a.getAttribute('href') : '/publications/';
+    h.textContent = 'selected publications';
+    var b = document.createElement('a');
+    b.href = url; b.textContent = 'All publications'; b.className = 'btn btn-sm z-depth-0'; b.setAttribute('role', 'button');
+    b.style.cssText = 'margin-left:1rem;font-size:0.9rem;vertical-align:middle;background:#003057;color:#fff;border:1px solid #b3a369;border-radius:6px;padding:0.35rem 0.8rem;';
+    h.appendChild(b);
+  });
+</script>
 
 Outside research, I provide **engineering consultancy** through the Bureau of Research, Testing and Consultation (BRTC), BUET. This includes forensic investigation of electrical fires, product testing and reliability assessment, technical committee work for government agencies, and recruitment examinations for public-sector utilities. See [consultancy](/consultancy/) for details.
 
